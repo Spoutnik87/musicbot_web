@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Observable } from 'rxjs';
 import { MessageModel } from 'src/app/models/message.model';
+
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
@@ -14,8 +14,6 @@ export class RegisterFormComponent {
     firstname: string;
     lastname: string;
   };
-  messages$: Observable<MessageModel[]>;
-  authenticatedUserLoading$: Observable<boolean>;
 
   @Output()
   submit = new EventEmitter<{
@@ -29,6 +27,9 @@ export class RegisterFormComponent {
 
   @Input()
   messages: MessageModel[];
+
+  @Input()
+  loading = false;
 
   constructor() {
     this.user = {

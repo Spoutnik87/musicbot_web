@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { MessageModel } from 'src/app/models/message.model';
 import { getAuthenticatedUserLoading, getMessages, IAppState, RegisterUser } from 'src/app/store';
 import { ClearMessages, SendErrorMessage } from 'src/app/store/actions/messages.actions';
 
@@ -10,13 +8,10 @@ import { ClearMessages, SendErrorMessage } from 'src/app/store/actions/messages.
   templateUrl: './register.component.html',
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  messages$: Observable<MessageModel[]>;
-  authenticatedUserLoading$: Observable<boolean>;
+  messages$ = this.store.select(getMessages);
+  authenticatedUserLoading$ = this.store.select(getAuthenticatedUserLoading);
 
-  constructor(private store: Store<IAppState>) {
-    this.messages$ = this.store.select(getMessages);
-    this.authenticatedUserLoading$ = this.store.select(getAuthenticatedUserLoading);
-  }
+  constructor(private store: Store<IAppState>) {}
 
   ngOnInit() {
     this.store.dispatch(new ClearMessages());

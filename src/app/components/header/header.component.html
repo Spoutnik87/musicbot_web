@@ -6,7 +6,7 @@
 
   <div [ngClass]="{ collapse: collapsed }" class="navbar-collapse" *appLet="authenticatedUser$ | async as authenticatedUser">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="authenticatedUser.isAuthenticated">
         <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">ACCUEIL</a>
       </li>
       <li class="nav-item" *ngIf="!authenticatedUser.isAuthenticated">

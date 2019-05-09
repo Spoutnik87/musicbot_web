@@ -12,6 +12,7 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AboutComponent } from './components/about/about.component';
+import { CardComponent } from './components/card/card.component';
 import { RegisterComponent } from './components/containers/register/register.component';
 import { SigninComponent } from './components/containers/signin/signin.component';
 import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
@@ -44,6 +45,7 @@ export function tokenGetter() {
     SigninComponent,
     SigninFormComponent,
     HeaderComponent,
+    CardComponent,
     LetDirective,
   ],
   imports: [

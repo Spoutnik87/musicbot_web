@@ -68,7 +68,7 @@ export class UserService {
     return this.httpClient.get(`${this.configService.getApiUrl()}/user/${id}`) as Observable<UserModel>;
   }
 
-  delete(login: string): Observable<any> {
-    return this.httpClient.delete(`${this.configService.getApiUrl()}/user/${login}`) as Observable<any>;
+  delete(id: string): Observable<any> {
+    return this.httpClient.delete(`${this.configService.getApiUrl()}/user/${id}`) as Observable<any>;
   }
 }

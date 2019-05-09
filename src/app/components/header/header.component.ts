@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from 'src/app/services';
-import { DisconnectUser, IAppState } from 'src/app/store';
+import { ClearStore, DisconnectUser, IAppState } from 'src/app/store';
 
 @Component({
   selector: 'app-header',
@@ -44,6 +44,7 @@ export class HeaderComponent implements OnDestroy {
     }
     this.authService.disconnect();
     this.store.dispatch(new DisconnectUser());
+    this.store.dispatch(new ClearStore());
     this.router.navigateByUrl('');
   }
 

@@ -79,13 +79,13 @@ export class RegisterUserFail implements Action {
 export class SigninUser implements Action {
   readonly type = SIGNIN_USER;
   payload: {
-    login: string;
+    email: string;
     password: string;
   };
 
-  constructor(login: string, password: string) {
+  constructor(email: string, password: string) {
     this.payload = {
-      login,
+      email,
       password,
     };
   }
@@ -238,13 +238,11 @@ export class DeleteUser implements Action {
   readonly type = DELETE_USER;
   payload: {
     id: string;
-    login: string;
   };
 
-  constructor(id: string, login: string) {
+  constructor(id: string) {
     this.payload = {
       id,
-      login,
     };
   }
 }

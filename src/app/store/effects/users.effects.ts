@@ -1,30 +1,50 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { ofType, Actions, Effect } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { catchError, mergeMap, switchMap } from 'rxjs/operators';
-import { UserService } from 'src/app/services';
+import { Store } from '@ngrx/store';
+import { iif, of } from 'rxjs';
+import { catchError, first, mergeMap, switchMap } from 'rxjs/operators';
+import { AuthService, UserService } from 'src/app/services';
+import { isFetchRequired } from 'src/app/utils';
 import {
+  AuthenticatedUserAlreadyCached,
   DeleteUser,
   DeleteUserFail,
   DeleteUserSuccess,
   DELETE_USER,
+  FetchAuthenticatedUser,
+  FetchAuthenticatedUserFail,
+  FetchAuthenticatedUserSuccess,
   FetchUser,
   FetchUserFail,
   FetchUserSuccess,
+  FETCH_AUTHENTICATED_USER,
   FETCH_USER,
   RegisterUser,
   RegisterUserFail,
   RegisterUserSuccess,
   REGISTER_USER,
+  SigninUser,
+  SigninUserFail,
+  SigninUserSuccess,
+  SIGNIN_USER,
   UpdateUser,
   UpdateUserFail,
   UpdateUserSuccess,
   UPDATE_USER,
 } from '../actions';
+import { IAppState } from '../reducers';
+import { getAuthenticatedUserUpdatedAt } from '../selectors';
 
 @Injectable()
 export class UsersEffects {
-  constructor(private action$: Actions, private userService: UserService) {}
+  constructor(
+    private action$: Actions,
+    private store: Store<IAppState>,
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
   @Effect()
   fetchUser$ = this.action$.pipe(
@@ -33,6 +53,45 @@ export class UsersEffects {
       this.userService.getById(action.payload).pipe(
         mergeMap(user => [new FetchUserSuccess(user)]),
         catchError(error => of(new FetchUserFail(action.payload, error)))
+      )
+    )
+  );
+
+  @Effect()
+  signinUser$ = this.action$.pipe(
+    ofType(SIGNIN_USER),
+    switchMap((action: SigninUser) =>
+      this.userService.signIn(action.payload.email, action.payload.password).pipe(
+        mergeMap(user => {
+          this.authService.signIn(user);
+          this.router.navigate(['/']);
+          return [new SigninUserSuccess(user)];
+        }),
+        catchError(error => of(new SigninUserFail(error)))
+      )
+    )
+  );
+
+  @Effect()
+  fetchAuthenticatedUser$ = this.action$.pipe(
+    ofType(FETCH_AUTHENTICATED_USER),
+    switchMap((action: FetchAuthenticatedUser) =>
+      this.store.select(getAuthenticatedUserUpdatedAt).pipe(
+        first(),
+        isFetchRequired(),
+        switchMap((doFetch: boolean) =>
+          iif(
+            () => doFetch,
+            this.userService.getSession().pipe(
+              mergeMap(user => [new FetchAuthenticatedUserSuccess(user)]),
+              catchError(error => {
+                this.authService.disconnect();
+                return of(new FetchAuthenticatedUserFail(error));
+              })
+            ),
+            of(new AuthenticatedUserAlreadyCached())
+          )
+        )
       )
     )
   );
