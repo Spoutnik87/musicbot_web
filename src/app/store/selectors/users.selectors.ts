@@ -24,6 +24,31 @@ export const getUserState = createSelector(
   (usersState: fromUsers.IUsersState, props: { id: number }) => usersState.entities[props.id]
 );
 
+export const getAuthenticatedUserState = createSelector(
+  getUsersState,
+  (usersState: fromUsers.IUsersState) => usersState.entities[usersState.authenticatedUserId]
+);
+
+export const getAuthenticatedUser = createSelector(
+  getAuthenticatedUserState,
+  userState => (userState != null ? userState.user : undefined)
+);
+
+export const getAuthenticatedUserLoading = createSelector(
+  getAuthenticatedUserState,
+  userState => (userState != null ? userState.loading : undefined)
+);
+
+export const getAuthenticatedUserLoaded = createSelector(
+  getAuthenticatedUserState,
+  userState => (userState != null ? userState.loaded : undefined)
+);
+
+export const getAuthenticatedUserUpdatedAt = createSelector(
+  getAuthenticatedUserState,
+  userState => (userState != null ? userState.updatedAt : undefined)
+);
+
 export const getUser = createSelector(
   getUserState,
   (userState: fromUsers.IUserState) => (userState ? userState.user : undefined)

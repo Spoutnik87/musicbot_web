@@ -5,24 +5,47 @@ import { BrowserModule } from '@angular/platform-browser';
 import { JwtModule } from '@auth0/angular-jwt';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AboutComponent } from './components/about/about.component';
+import { RegisterComponent } from './components/containers/register/register.component';
+import { SigninComponent } from './components/containers/signin/signin.component';
+import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
+import { SigninFormComponent } from './components/forms/signin-form/signin-form.component';
+import { HeaderComponent } from './components/header/header.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoadingComponent } from './components/loading/loading.component';
+import { MessageComponent } from './components/message/message.component';
+import { MessagesComponent } from './components/messages/messages.component';
 import { LetDirective } from './directives/let.directive';
 import { guards } from './guards';
 import { services } from './services';
 import { effects } from './store/effects';
-import { metaReducers, reducers } from './store/reducers';
+import { metaReducers, reducers, CustomSerializer } from './store/reducers';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
 
 @NgModule({
-  declarations: [AppComponent, LetDirective],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    AboutComponent,
+    LoadingComponent,
+    MessageComponent,
+    MessagesComponent,
+    RegisterComponent,
+    RegisterFormComponent,
+    SigninComponent,
+    SigninFormComponent,
+    HeaderComponent,
+    LetDirective,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -43,7 +66,7 @@ export function tokenGetter() {
     EffectsModule.forRoot([]),
     EffectsModule.forFeature(effects),
   ],
-  providers: [...services, ...guards],
+  providers: [{ provide: RouterStateSerializer, useClass: CustomSerializer }, ...services, ...guards],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

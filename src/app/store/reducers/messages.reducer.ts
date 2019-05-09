@@ -1,4 +1,5 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { CLEAR_STORE, StoreAction } from '../actions';
 import { MessageModel } from './../../models/message.model';
 import {
   CLEAR_MESSAGES,
@@ -18,7 +19,7 @@ export const messagesAdapter: EntityAdapter<MessageModel> = createEntityAdapter<
 
 const initialState: IMessagesState = messagesAdapter.getInitialState();
 
-export function messagesReducer(state = initialState, action: MessagesAction): IMessagesState {
+export function messagesReducer(state = initialState, action: MessagesAction | StoreAction): IMessagesState {
   let message: MessageModel;
   let messages: MessageModel[];
   switch (action.type) {
@@ -75,6 +76,7 @@ export function messagesReducer(state = initialState, action: MessagesAction): I
       return action.payload.clear ? messagesAdapter.addAll(messages, state) : messagesAdapter.addMany(messages, state);
     case REMOVE_MESSAGE:
       return messagesAdapter.removeOne(action.payload, state);
+    case CLEAR_STORE:
     case CLEAR_MESSAGES:
       return messagesAdapter.removeAll(state);
     default:

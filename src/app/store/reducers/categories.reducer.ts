@@ -1,4 +1,5 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { ClearStore, CLEAR_STORE, StoreAction } from '../actions';
 import {
   ADD_CATEGORIES,
   ADD_CATEGORY,
@@ -39,7 +40,7 @@ const initialState: ICategoriesState = categoriesAdapter.getInitialState({
   loaded: false,
 });
 
-export function categoriesReducer(state = initialState, action: CategoriesAction): ICategoriesState {
+export function categoriesReducer(state = initialState, action: CategoriesAction | StoreAction): ICategoriesState {
   switch (action.type) {
     case FETCH_CATEGORIES:
       return {
@@ -164,6 +165,7 @@ export function categoriesReducer(state = initialState, action: CategoriesAction
         },
         state
       );
+    case CLEAR_STORE:
     case CLEAR_CATEGORIES:
       return categoriesAdapter.removeAll(state);
     default:

@@ -1,4 +1,5 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { CLEAR_STORE, StoreAction } from '../actions';
 import {
   ADD_CONTENT,
   ADD_CONTENTS,
@@ -39,7 +40,7 @@ const initialState: IContentsState = contentsAdapter.getInitialState({
   loaded: false,
 });
 
-export function contentsReducer(state = initialState, action: ContentsAction): IContentsState {
+export function contentsReducer(state = initialState, action: ContentsAction | StoreAction): IContentsState {
   switch (action.type) {
     case FETCH_CONTENTS:
       return {
@@ -164,6 +165,7 @@ export function contentsReducer(state = initialState, action: ContentsAction): I
         },
         state
       );
+    case CLEAR_STORE:
     case CLEAR_CONTENTS:
       return contentsAdapter.removeAll(state);
     default:

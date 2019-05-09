@@ -7,10 +7,10 @@ export class UserGuard implements CanActivate {
   constructor(private router: Router, private authService: AuthService) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const isStudent = this.authService.isAuthenticated() && (this.authService.isAdmin() || this.authService.isUser());
-    if (!isStudent) {
+    const isUser = this.authService.isAuthenticated() && (this.authService.isAdmin() || this.authService.isUser());
+    if (!isUser) {
       this.router.navigate(['/']);
     }
-    return isStudent;
+    return isUser;
   }
 }

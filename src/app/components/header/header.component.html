@@ -1,0 +1,26 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/">Musicbot</a>
+  <button class="navbar-toggler" type="button" (click)="toggle()">
+    <fa-icon [icon]="collapsed ? faAngleDoubleDown : faAngleDoubleUp"></fa-icon>
+  </button>
+
+  <div [ngClass]="{ collapse: collapsed }" class="navbar-collapse" *appLet="authenticatedUser$ | async as authenticatedUser">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">ACCUEIL</a>
+      </li>
+      <li class="nav-item" *ngIf="!authenticatedUser.isAuthenticated">
+        <a class="nav-link" routerLink="/signin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">CONNEXION</a>
+      </li>
+      <li class="nav-item" *ngIf="!authenticatedUser.isAuthenticated">
+        <a class="nav-link" routerLink="/register" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">INSCRIPTION</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">A PROPOS</a>
+      </li>
+      <li class="nav-item" *ngIf="authenticatedUser.isAuthenticated">
+        <a class="nav-link" (click)="onDisconnect()">SE DECONNECTER</a>
+      </li>
+    </ul>
+  </div>
+</nav>

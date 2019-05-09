@@ -1,4 +1,5 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { CLEAR_STORE, StoreAction } from '../actions';
 import {
   ADD_SERVER,
   ADD_SERVERS,
@@ -39,7 +40,7 @@ const initialState: IServersState = serversAdapter.getInitialState({
   loaded: false,
 });
 
-export function serversReducer(state = initialState, action: ServersAction): IServersState {
+export function serversReducer(state = initialState, action: ServersAction | StoreAction): IServersState {
   switch (action.type) {
     case FETCH_SERVERS:
       return {
@@ -164,6 +165,7 @@ export function serversReducer(state = initialState, action: ServersAction): ISe
         },
         state
       );
+    case CLEAR_STORE:
     case CLEAR_SERVERS:
       return serversAdapter.removeAll(state);
     default:

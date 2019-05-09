@@ -1,4 +1,5 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { CLEAR_STORE, StoreAction } from '../actions';
 import {
   ADD_ROLE,
   ADD_ROLES,
@@ -32,7 +33,7 @@ const initialState: IRolesState = rolesAdapter.getInitialState({
   loaded: false,
 });
 
-export function rolesReducer(state = initialState, action: RolesAction): IRolesState {
+export function rolesReducer(state = initialState, action: RolesAction | StoreAction): IRolesState {
   switch (action.type) {
     case FETCH_ROLES:
       return {
@@ -108,6 +109,7 @@ export function rolesReducer(state = initialState, action: RolesAction): IRolesS
         },
         state
       );
+    case CLEAR_STORE:
     case CLEAR_ROLES:
       return rolesAdapter.removeAll(state);
     default:

@@ -1,16 +1,6 @@
 import { Action } from '@ngrx/store';
 import { UserModel } from '../../models/user.model';
 
-/*
-export const LOGIN_PAGE_LOGIN = '[Login Page] Login';
-export const USER_API_LOGIN_SUCCESS = '[User API] Login success';
-export const USER_API_LOGIN_FAILURE = '[User API] Login failure';
-
-export const REGISTER_PAGE_REGISTER = '[Register Page] Register';
-export const USER_API_REGISTER_SUCCESS = '[User API] Register success';
-export const USER_API_REGISTER_FAILURE = '[User API] Register failure';
-*/
-
 export const CLEAR_USERS = 'CLEAR_USERS';
 export const DISCONNECT_USER = 'DISCONNECT_USER';
 

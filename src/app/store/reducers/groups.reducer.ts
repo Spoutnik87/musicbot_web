@@ -1,4 +1,5 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { CLEAR_STORE, StoreAction } from '../actions';
 import {
   ADD_GROUP,
   ADD_GROUPS,
@@ -39,7 +40,7 @@ const initialState: IGroupsState = groupsAdapter.getInitialState({
   loaded: false,
 });
 
-export function groupsReducer(state = initialState, action: GroupsAction): IGroupsState {
+export function groupsReducer(state = initialState, action: GroupsAction | StoreAction): IGroupsState {
   switch (action.type) {
     case FETCH_GROUPS:
       return {
@@ -164,6 +165,7 @@ export function groupsReducer(state = initialState, action: GroupsAction): IGrou
         },
         state
       );
+    case CLEAR_STORE:
     case CLEAR_GROUPS:
       return groupsAdapter.removeAll(state);
     default:

@@ -1,4 +1,5 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { CLEAR_STORE, StoreAction } from '../actions';
 import {
   ADD_USER,
   ADD_USERS,
@@ -49,7 +50,7 @@ const initialState: IUsersState = usersAdapter.getInitialState({
   authenticatedUserId: TEMPORARY_AUTHENTICATED_USER_ID,
 });
 
-export function usersReducer(state = initialState, action: UsersAction): IUsersState {
+export function usersReducer(state = initialState, action: UsersAction | StoreAction): IUsersState {
   switch (action.type) {
     case DISCONNECT_USER:
       return {
@@ -259,6 +260,7 @@ export function usersReducer(state = initialState, action: UsersAction): IUsersS
       );
     case DELETE_USER_SUCCESS:
       return usersAdapter.removeOne(action.payload.id, state);
+    case CLEAR_STORE:
     case CLEAR_USERS:
       return usersAdapter.removeAll(state);
     default:
