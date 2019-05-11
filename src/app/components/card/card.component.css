@@ -1,0 +1,17 @@
+.card-header {
+  background-color: #424444;
+  color: #ffffff;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+}
+
+.card-body {
+  background-color: #c6c6c6;
+}
+
+.card {
+  border-radius: 0.5em;
+  border: none;
+  box-shadow: 5px 5px 10px 0px #656565;
+  font-family: 'Verdana', 'Arial';
+}
