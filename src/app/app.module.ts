@@ -22,6 +22,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { MessageComponent } from './components/message/message.component';
 import { MessagesComponent } from './components/messages/messages.component';
+import { ServerListComponent } from './components/server-list/server-list.component';
 import { LetDirective } from './directives/let.directive';
 import { guards } from './guards';
 import { services } from './services';
@@ -46,6 +47,7 @@ export function tokenGetter() {
     SigninFormComponent,
     HeaderComponent,
     CardComponent,
+    ServerListComponent,
     LetDirective,
   ],
   imports: [

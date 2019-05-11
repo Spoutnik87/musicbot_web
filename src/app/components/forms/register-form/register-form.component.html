@@ -1,5 +1,5 @@
 <app-card title="Inscription">
-  <form (ngSubmit)="onSubmit()">
+  <form>
     <div class="form-group">
       <label for="email">Adresse email</label>
       <input type="email" class="form-control" name="email" id="email" [(ngModel)]="user.email" placeholder="Adresse email" />
@@ -44,7 +44,7 @@
       <label for="firstname">Prénom </label>
       <input type="text" class="form-control" name="firstname" id="firstname" [(ngModel)]="user.firstname" placeholder="Prénom" />
     </div>
-    <button type="submit" class="btn btn-primary btn-lg mt-2 w-100" *ngIf="!loading">S'inscrire</button>
+    <button class="btn btn-primary btn-lg mt-2 w-100" *ngIf="!loading" (click)="onSubmit()">S'inscrire</button>
     <app-loading [loading]="loading"></app-loading>
   </form>
 </app-card>

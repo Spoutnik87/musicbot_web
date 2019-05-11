@@ -1,5 +1,5 @@
 <app-card title="Connexion">
-  <form (ngSubmit)="onSubmit()">
+  <form>
     <div class="form-group">
       <label for="email">Adresse email</label>
       <input type="text" class="form-control" name="email" id="email" [(ngModel)]="user.email" placeholder="Adresse email" />
@@ -10,6 +10,6 @@
     </div>
     <div>Vous n'êtes pas inscrit ? <a routerLink="/register">S'inscrire</a></div>
     <app-loading [loading]="loading"></app-loading>
-    <button type="submit" class="btn btn-primary btn-lg mt-2 w-100" *ngIf="!loading">Se connecter</button>
+    <button class="btn btn-primary btn-lg mt-2 w-100" *ngIf="!loading" (click)="onSubmit()">Se connecter</button>
   </form>
 </app-card>

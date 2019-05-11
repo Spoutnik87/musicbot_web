@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -35,28 +35,18 @@ export class UserService {
   }
 
   register(email: string, nickname: string, password: string, firstname: string, lastname: string): Observable<UserModel> {
-    const params = new HttpParams({
-      fromObject: {
-        email,
-        nickname,
-        password,
-        firstname,
-        lastname,
-      },
-    });
-    return this.httpClient.post(`${this.configService.getApiUrl()}/user`, undefined, {
-      params,
+    return this.httpClient.post(`${this.configService.getApiUrl()}/user`, {
+      email,
+      nickname,
+      password,
+      firstname,
+      lastname,
     }) as Observable<UserModel>;
   }
 
   update(id: string, nickname: string) {
-    const params = new HttpParams({
-      fromObject: {
-        nickname,
-      },
-    });
-    return this.httpClient.put(`${this.configService.getApiUrl()}/user/${id}`, undefined, {
-      params,
+    return this.httpClient.put(`${this.configService.getApiUrl()}/user/${id}`, {
+      nickname,
     }) as Observable<UserModel>;
   }
 
