@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --prod",
     "test": "ng test",
     "test-junit": "ng test --karmaConfig=src/karma-junit.conf.js",
     "lint": "ng lint",
