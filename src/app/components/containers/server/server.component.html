@@ -1,0 +1,16 @@
+<div class="container mt-5" *ngIf="serverState$ | async as serverState">
+  <app-loading class="mt-5 text-center" [loading]="serverState.loading"></app-loading>
+  <ng-container *ngIf="!serverState.loading">
+    <app-card [title]="'Serveur: ' + serverState.server.name">
+      <div class="w-100" *ngIf="serverState.server.linked === false">
+        Ce serveur n'est pas lié à une instance Discord. <br />Executez la commande suivante dans le chat Discord de votre serveur :
+        <div class="mt-2 w-100 token-container">
+          {{ configService.getCommandPrefix() }}link {{ (serverLinkToken$ | async)?.serverLinkToken }}
+        </div>
+      </div>
+      <div class="w-100" *ngIf="serverState.server.linked">
+        Ce serveur est lié
+      </div>
+    </app-card>
+  </ng-container>
+</div>

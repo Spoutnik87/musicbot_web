@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
+import { CreateServerComponent } from './components/containers/create-server/create-server.component';
+import { HomeComponent } from './components/containers/home/home.component';
 import { RegisterComponent } from './components/containers/register/register.component';
+import { ServerComponent } from './components/containers/server/server.component';
 import { SigninComponent } from './components/containers/signin/signin.component';
-import { HomeComponent } from './components/home/home.component';
 import { AuthenticatedGuard, NotAuthenticatedGuard } from './guards';
 
 const routes: Routes = [
@@ -25,6 +27,16 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent,
     canActivate: [NotAuthenticatedGuard],
+  },
+  {
+    path: 'create-server',
+    component: CreateServerComponent,
+    canActivate: [AuthenticatedGuard],
+  },
+  {
+    path: 'server/:id',
+    component: ServerComponent,
+    canActivate: [AuthenticatedGuard],
   },
 ];
 

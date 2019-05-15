@@ -103,7 +103,10 @@ export class UsersEffects {
       this.userService
         .register(action.payload.email, action.payload.nickname, action.payload.password, action.payload.firstname, action.payload.lastname)
         .pipe(
-          mergeMap(user => [new RegisterUserSuccess()]),
+          mergeMap(() => {
+            this.router.navigate(['/signin']);
+            return [new RegisterUserSuccess()];
+          }),
           catchError(error => of(new RegisterUserFail(error)))
         )
     )

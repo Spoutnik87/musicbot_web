@@ -5,11 +5,13 @@ import { UserModel } from '../models/user.model';
 
 export class AuthService {
   private authenticatedUser: BehaviorSubject<{
+    id: string;
     email: string;
     token: string;
     role: Role;
   }>;
   authenticatedUser$: Observable<{
+    id: string;
     email: string;
     token: string;
     role: Role;
@@ -18,12 +20,14 @@ export class AuthService {
 
   constructor() {
     let user: {
+      id: string;
       email: string;
       token: string;
       role: Role;
     };
     if (localStorage.length !== 0) {
       user = {
+        id: this.getId(),
         email: this.getEmail(),
         token: this.getToken(),
         role: this.getRole(),
@@ -35,10 +39,12 @@ export class AuthService {
   }
 
   signIn(user: UserModel): void {
+    localStorage.setItem('id', user.id);
     localStorage.setItem('email', user.email);
     localStorage.setItem('token', user.token);
     localStorage.setItem('role', user.role.name);
     this.authenticatedUser.next({
+      id: user.id,
       email: user.email,
       token: user.token,
       role: user.role.name as Role,
@@ -48,6 +54,10 @@ export class AuthService {
   disconnect(): void {
     localStorage.clear();
     this.authenticatedUser.next(undefined);
+  }
+
+  getId(): string {
+    return localStorage.getItem('id');
   }
 
   getEmail(): string {

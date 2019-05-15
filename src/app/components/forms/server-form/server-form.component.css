@@ -1,0 +1,5 @@
+.token-container {
+  white-space: nowrap;
+  overflow: auto;
+  font-weight: bold;
+}

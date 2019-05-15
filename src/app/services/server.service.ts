@@ -31,4 +31,18 @@ export class ServerService {
   delete(id: string): Observable<any> {
     return this.httpClient.delete(`${this.configService.getApiUrl()}/server/${id}`);
   }
+
+  /**
+   * Generate a token that must be entered in a discord server to link the server identified by @id
+   * @param id Server id
+   */
+  getServerLinkToken(
+    id: string
+  ): Observable<{
+    serverLinkToken: string;
+  }> {
+    return this.httpClient.get(`${this.configService.getApiUrl()}/server/link/${id}`) as Observable<{
+      serverLinkToken: string;
+    }>;
+  }
 }

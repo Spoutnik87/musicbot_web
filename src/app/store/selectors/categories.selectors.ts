@@ -21,7 +21,7 @@ export const getCategoriesLoaded = createSelector(
 
 export const getCategoryState = createSelector(
   getCategoriesState,
-  (categoriesState: fromCategories.ICategoriesState, props: { id: number }) => categoriesState.entities[props.id]
+  (categoriesState: fromCategories.ICategoriesState, props: { id: string }) => categoriesState.entities[props.id]
 );
 
 export const getCategory = createSelector(

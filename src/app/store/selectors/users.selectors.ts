@@ -21,7 +21,7 @@ export const getUsersLoaded = createSelector(
 
 export const getUserState = createSelector(
   getUsersState,
-  (usersState: fromUsers.IUsersState, props: { id: number }) => usersState.entities[props.id]
+  (usersState: fromUsers.IUsersState, props: { id: string }) => usersState.entities[props.id]
 );
 
 export const getAuthenticatedUserState = createSelector(

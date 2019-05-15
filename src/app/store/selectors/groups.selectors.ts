@@ -21,7 +21,7 @@ export const getGroupsLoaded = createSelector(
 
 export const getGroupState = createSelector(
   getGroupsState,
-  (groupsState: fromGroups.IGroupsState, props: { id: number }) => groupsState.entities[props.id]
+  (groupsState: fromGroups.IGroupsState, props: { id: string }) => groupsState.entities[props.id]
 );
 
 export const getGroup = createSelector(

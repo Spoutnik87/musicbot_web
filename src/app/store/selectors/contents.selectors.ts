@@ -21,7 +21,7 @@ export const getContentsLoaded = createSelector(
 
 export const getContentState = createSelector(
   getContentsState,
-  (contentsState: fromContents.IContentsState, props: { id: number }) => contentsState.entities[props.id]
+  (contentsState: fromContents.IContentsState, props: { id: string }) => contentsState.entities[props.id]
 );
 
 export const getContent = createSelector(

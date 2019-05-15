@@ -1,1 +1,15 @@
-<app-card title="Mes serveurs"></app-card>
+<div class="card">
+  <div class="card-header">
+    Mes serveurs
+    <div class="float-right">
+      <a class="btn btn-success" routerLink="/create-server"><fa-icon [icon]="faPlusSquare"></fa-icon></a>
+    </div>
+  </div>
+  <div class="card-body">
+    <app-loading [loading]="serversLoading$ | async"></app-loading>
+    <ng-container *appLet="servers$ | async as servers">
+      <div class="text-center" *ngIf="servers.length === 0">Vous n'avez aucun serveur actuellement.</div>
+      <app-server-card *ngFor="let server of servers" [server]="server" (select)="onSelect($event)"></app-server-card>
+    </ng-container>
+  </div>
+</div>
