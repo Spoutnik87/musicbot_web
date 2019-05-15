@@ -7,6 +7,7 @@
         <div class="mt-2 w-100 token-container">
           {{ configService.getCommandPrefix() }}link {{ (serverLinkToken$ | async)?.serverLinkToken }}
         </div>
+        <button class="btn btn-primary mt-2" (click)="refresh()">Rafraîchir</button>
       </div>
       <div class="w-100" *ngIf="serverState.server.linked">
         Ce serveur est lié

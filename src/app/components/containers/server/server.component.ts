@@ -39,4 +39,8 @@ export class ServerComponent {
   ) {
     this.store.dispatch(new FetchServer(this.route.snapshot.paramMap.get('id')));
   }
+
+  refresh() {
+    this.store.dispatch(new FetchServer(this.route.snapshot.paramMap.get('id')));
+  }
 }
