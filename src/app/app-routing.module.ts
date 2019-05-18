@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AboutComponent } from './components/about/about.component';
+import { AboutComponent } from './components/containers/about/about.component';
+import { CreateCategoryComponent } from './components/containers/create-category/create-category.component';
+import { CreateContentComponent } from './components/containers/create-content/create-content.component';
+import { CreateGroupComponent } from './components/containers/create-group/create-group.component';
 import { CreateServerComponent } from './components/containers/create-server/create-server.component';
 import { HomeComponent } from './components/containers/home/home.component';
 import { RegisterComponent } from './components/containers/register/register.component';
@@ -36,6 +39,21 @@ const routes: Routes = [
   {
     path: 'server/:id',
     component: ServerComponent,
+    canActivate: [AuthenticatedGuard],
+  },
+  {
+    path: 'create-content/:id',
+    component: CreateContentComponent,
+    canActivate: [AuthenticatedGuard],
+  },
+  {
+    path: 'create-category/:id',
+    component: CreateCategoryComponent,
+    canActivate: [AuthenticatedGuard],
+  },
+  {
+    path: 'create-group/:id',
+    component: CreateGroupComponent,
     canActivate: [AuthenticatedGuard],
   },
 ];

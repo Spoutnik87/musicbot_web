@@ -18,6 +18,9 @@ export class ServerFormComponent {
     name: string;
   }>();
 
+  @Output()
+  cancel = new EventEmitter();
+
   step = 1;
   choice: 'CREATE' | 'JOIN' = 'JOIN';
 
@@ -52,7 +55,7 @@ export class ServerFormComponent {
     if (this.step > 1) {
       this.step--;
     } else {
-      this.router.navigateByUrl('');
+      this.cancel.emit();
     }
   }
 

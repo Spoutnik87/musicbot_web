@@ -1,11 +1,14 @@
+import { GroupModel } from './group.model';
+
 export interface ContentModel {
   id: string;
   name: string;
-  groupId: string;
   extension?: string;
   size?: number;
-  content: boolean;
+  media: boolean;
   thumbnail: boolean;
   contentTypeId: number;
   categoryId: number;
+  serverId: string;
+  groups: GroupModel[];
 }

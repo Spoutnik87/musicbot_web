@@ -1,4 +1,5 @@
 import { createSelector } from '@ngrx/store';
+import { ContentModel } from 'src/app/models/content.model';
 import { IAppState } from '../reducers';
 import * as fromContents from '../reducers/contents.reducer';
 
@@ -7,6 +8,11 @@ export const getContentsState = (state: IAppState) => state.contents;
 export const getContents = createSelector(
   getContentsState,
   fromContents.getContents
+);
+
+export const getServerContents = createSelector(
+  getContents,
+  (contents: ContentModel[], props: { serverId: string }) => contents.filter(content => content.serverId === props.serverId)
 );
 
 export const getContentsLoading = createSelector(

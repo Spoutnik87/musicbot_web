@@ -9,9 +9,9 @@ import {
   FETCH_GROUP,
   FETCH_GROUP_FAIL,
   FETCH_GROUP_SUCCESS,
-  FETCH_GROUPS,
-  FETCH_GROUPS_FAIL,
-  FETCH_GROUPS_SUCCESS,
+  FETCH_SERVER_GROUPS,
+  FETCH_SERVER_GROUPS_FAIL,
+  FETCH_SERVER_GROUPS_SUCCESS,
   GroupsAction,
   UPDATE_GROUP,
   UPDATE_GROUP_FAIL,
@@ -42,16 +42,16 @@ const initialState: IGroupsState = groupsAdapter.getInitialState({
 
 export function groupsReducer(state = initialState, action: GroupsAction | StoreAction): IGroupsState {
   switch (action.type) {
-    case FETCH_GROUPS:
+    case FETCH_SERVER_GROUPS:
       return {
         ...state,
         loading: true,
         loaded: false,
       };
-    case FETCH_GROUPS_SUCCESS:
+    case FETCH_SERVER_GROUPS_SUCCESS:
       return {
         ...groupsAdapter.addAll(
-          action.payload.map(group => ({
+          action.payload.groups.map(group => ({
             group,
             loading: false,
             loaded: true,
@@ -63,7 +63,7 @@ export function groupsReducer(state = initialState, action: GroupsAction | Store
         loading: false,
         loaded: true,
       };
-    case FETCH_GROUPS_FAIL:
+    case FETCH_SERVER_GROUPS_FAIL:
       return {
         ...state,
         loading: false,

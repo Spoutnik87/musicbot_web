@@ -11,13 +11,21 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AboutComponent } from './components/about/about.component';
 import { CardComponent } from './components/card/card.component';
+import { AboutComponent } from './components/containers/about/about.component';
+import { ContentCardComponent } from './components/containers/content-card/content-card.component';
+import { CreateCategoryComponent } from './components/containers/create-category/create-category.component';
+import { CreateContentComponent } from './components/containers/create-content/create-content.component';
+import { CreateGroupComponent } from './components/containers/create-group/create-group.component';
 import { CreateServerComponent } from './components/containers/create-server/create-server.component';
 import { HomeComponent } from './components/containers/home/home.component';
 import { RegisterComponent } from './components/containers/register/register.component';
 import { ServerComponent } from './components/containers/server/server.component';
 import { SigninComponent } from './components/containers/signin/signin.component';
+import { ContentListComponent } from './components/content-list/content-list.component';
+import { CategoryFormComponent } from './components/forms/category-form/category-form.component';
+import { ContentFormComponent } from './components/forms/content-form/content-form.component';
+import { GroupFormComponent } from './components/forms/group-form/group-form.component';
 import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
 import { ServerFormComponent } from './components/forms/server-form/server-form.component';
 import { SigninFormComponent } from './components/forms/signin-form/signin-form.component';
@@ -57,6 +65,14 @@ export function tokenGetter() {
     ServerFormComponent,
     CreateServerComponent,
     ServerComponent,
+    CreateContentComponent,
+    ContentFormComponent,
+    ContentCardComponent,
+    ContentListComponent,
+    CategoryFormComponent,
+    CreateCategoryComponent,
+    GroupFormComponent,
+    CreateGroupComponent,
     LetDirective,
   ],
   imports: [

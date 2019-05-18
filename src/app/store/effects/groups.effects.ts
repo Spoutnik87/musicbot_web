@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { ofType, Actions, Effect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, mergeMap, switchMap } from 'rxjs/operators';
@@ -13,13 +14,13 @@ import {
   DeleteGroupSuccess,
   DELETE_GROUP,
   FetchGroup,
-  FetchGroupsFail,
-  FetchGroupsSuccess,
   FetchGroupFail,
   FetchGroupSuccess,
+  FetchServerGroups,
+  FetchServerGroupsFail,
+  FetchServerGroupsSuccess,
   FETCH_GROUP,
-  FETCH_GROUPS,
-  GroupsAction,
+  FETCH_SERVER_GROUPS,
   UpdateGroup,
   UpdateGroupFail,
   UpdateGroupSuccess,
@@ -28,15 +29,15 @@ import {
 
 @Injectable()
 export class GroupsEffects {
-  constructor(private action$: Actions, private groupService: GroupService) {}
+  constructor(private action$: Actions, private groupService: GroupService, private router: Router) {}
 
   @Effect()
-  fetchGroups$ = this.action$.pipe(
-    ofType(FETCH_GROUPS),
-    switchMap((action: GroupsAction) =>
-      this.groupService.getAll().pipe(
-        mergeMap(groups => [new FetchGroupsSuccess(groups)]),
-        catchError(error => of(new FetchGroupsFail(error)))
+  fetchServerGroups$ = this.action$.pipe(
+    ofType(FETCH_SERVER_GROUPS),
+    switchMap((action: FetchServerGroups) =>
+      this.groupService.getByServerId(action.payload).pipe(
+        mergeMap(groups => [new FetchServerGroupsSuccess(action.payload, groups)]),
+        catchError(error => of(new FetchServerGroupsFail(action.payload, error)))
       )
     )
   );
@@ -57,7 +58,10 @@ export class GroupsEffects {
     ofType(CREATE_GROUP),
     switchMap((action: CreateGroup) =>
       this.groupService.create(action.payload.serverId, action.payload.name).pipe(
-        mergeMap(group => [new CreateGroupSuccess(group)]),
+        mergeMap(group => {
+          this.router.navigateByUrl(`/server/${action.payload.serverId}`);
+          return [new CreateGroupSuccess(group)];
+        }),
         catchError(error => of(new CreateGroupFail(error)))
       )
     )

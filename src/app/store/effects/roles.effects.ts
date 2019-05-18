@@ -5,13 +5,13 @@ import { catchError, mergeMap, switchMap } from 'rxjs/operators';
 import { RoleService } from 'src/app/services';
 import {
   FetchRole,
+  FetchRoles,
   FetchRolesFail,
   FetchRolesSuccess,
   FetchRoleFail,
   FetchRoleSuccess,
   FETCH_ROLE,
   FETCH_ROLES,
-  RolesAction,
 } from '../actions';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class RolesEffects {
   @Effect()
   fetchRoles$ = this.action$.pipe(
     ofType(FETCH_ROLES),
-    switchMap((action: RolesAction) =>
+    switchMap((action: FetchRoles) =>
       this.roleService.getAll().pipe(
         mergeMap(roles => [new FetchRolesSuccess(roles)]),
         catchError(error => of(new FetchRolesFail(error)))

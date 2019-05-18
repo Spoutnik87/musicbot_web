@@ -14,13 +14,13 @@ import {
   DeleteServerSuccess,
   DELETE_SERVER,
   FetchServer,
+  FetchServers,
   FetchServersFail,
   FetchServersSuccess,
   FetchServerFail,
   FetchServerSuccess,
   FETCH_SERVER,
   FETCH_SERVERS,
-  ServersAction,
   UpdateServer,
   UpdateServerFail,
   UpdateServerSuccess,
@@ -34,7 +34,7 @@ export class ServersEffects {
   @Effect()
   fetchServers$ = this.action$.pipe(
     ofType(FETCH_SERVERS),
-    switchMap((action: ServersAction) =>
+    switchMap((action: FetchServers) =>
       this.serverService.getAll().pipe(
         mergeMap(servers => [new FetchServersSuccess(servers)]),
         catchError(error => of(new FetchServersFail(error)))

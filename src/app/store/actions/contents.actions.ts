@@ -3,9 +3,9 @@ import { ContentModel } from 'src/app/models/content.model';
 
 export const CLEAR_CONTENTS = 'CLEAR_CONTENTS';
 
-export const FETCH_CONTENTS = 'FETCH_CONTENTS';
-export const FETCH_CONTENTS_SUCCESS = 'FETCH_CONTENTS_SUCCESS';
-export const FETCH_CONTENTS_FAIL = 'FETCH_CONTENTS_FAIL';
+export const FETCH_SERVER_CONTENTS = 'FETCH_SERVER_CONTENTS';
+export const FETCH_SERVER_CONTENTS_SUCCESS = 'FETCH_SERVER_CONTENTS_SUCCESS';
+export const FETCH_SERVER_CONTENTS_FAIL = 'FETCH_SERVER_CONTENTS_FAIL';
 
 export const FETCH_CONTENT = 'FETCH_CONTENT';
 export const FETCH_CONTENT_SUCCESS = 'FETCH_CONTENT_SUCCESS';
@@ -30,25 +30,42 @@ export class ClearContents implements Action {
   readonly type = CLEAR_CONTENTS;
 }
 
-export class FetchContents implements Action {
-  readonly type = FETCH_CONTENTS;
-}
+export class FetchServerContents implements Action {
+  readonly type = FETCH_SERVER_CONTENTS;
+  payload: string;
 
-export class FetchContentsSuccess implements Action {
-  readonly type = FETCH_CONTENTS_SUCCESS;
-  payload: ContentModel[];
-
-  constructor(contents: ContentModel[]) {
-    this.payload = contents;
+  constructor(serverId: string) {
+    this.payload = serverId;
   }
 }
 
-export class FetchContentsFail implements Action {
-  readonly type = FETCH_CONTENTS_FAIL;
-  payload: any;
+export class FetchServerContentsSuccess implements Action {
+  readonly type = FETCH_SERVER_CONTENTS_SUCCESS;
+  payload: {
+    serverId: string;
+    contents: ContentModel[];
+  };
 
-  constructor(error: any) {
-    this.payload = error;
+  constructor(serverId: string, contents: ContentModel[]) {
+    this.payload = {
+      serverId,
+      contents,
+    };
+  }
+}
+
+export class FetchServerContentsFail implements Action {
+  readonly type = FETCH_SERVER_CONTENTS_FAIL;
+  payload: {
+    serverId: string;
+    error: any;
+  };
+
+  constructor(serverId: string, error: any) {
+    this.payload = {
+      serverId,
+      error,
+    };
   }
 }
 
@@ -88,18 +105,24 @@ export class FetchContentFail implements Action {
 export class CreateContent implements Action {
   readonly type = CREATE_CONTENT;
   payload: {
+    serverId: string;
     groupId: string;
     name: string;
     categoryId: string;
     contentTypeId: string;
+    thumbnail: any;
+    media: any;
   };
 
-  constructor(groupId: string, name: string, categoryId: string, contentTypeId: string) {
+  constructor(serverId: string, groupId: string, name: string, categoryId: string, contentTypeId: string, thumbnail: any, media: any) {
     this.payload = {
+      serverId,
       groupId,
       name,
       categoryId,
       contentTypeId,
+      thumbnail,
+      media,
     };
   }
 }
@@ -236,9 +259,9 @@ export class AddContent implements Action {
 
 export type ContentsAction =
   | ClearContents
-  | FetchContents
-  | FetchContentsSuccess
-  | FetchContentsFail
+  | FetchServerContents
+  | FetchServerContentsSuccess
+  | FetchServerContentsFail
   | FetchContent
   | FetchContentSuccess
   | FetchContentFail

@@ -45,4 +45,16 @@ export class ServerService {
       serverLinkToken: string;
     }>;
   }
+
+  updateMedia(media): Observable<ServerModel> {
+    const form: FormData = new FormData();
+    form.append('media', media);
+    return this.httpClient.put(`${this.configService.getApiUrl()}/content/media`, form) as Observable<ServerModel>;
+  }
+
+  updateThumbnail(thumbnail): Observable<ServerModel> {
+    const form: FormData = new FormData();
+    form.append('thumbnail', thumbnail);
+    return this.httpClient.put(`${this.configService.getApiUrl()}/content/thumbnail`, form) as Observable<ServerModel>;
+  }
 }

@@ -8,8 +8,8 @@ import { ConfigService } from './config.service';
 export class CategoryService {
   constructor(private configService: ConfigService, private httpClient: HttpClient) {}
 
-  getAll(): Observable<CategoryModel[]> {
-    return this.httpClient.get(`${this.configService.getApiUrl()}/category/list`) as Observable<CategoryModel[]>;
+  getByServerId(serverId: string): Observable<CategoryModel[]> {
+    return this.httpClient.get(`${this.configService.getApiUrl()}/category/server/${serverId}`) as Observable<CategoryModel[]>;
   }
 
   getById(id: string): Observable<CategoryModel> {

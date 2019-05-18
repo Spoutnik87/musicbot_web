@@ -25,7 +25,7 @@
   <button class="btn btn-primary mt-2 ml-2" *ngIf="!loading" (click)="onCancel()">Retour</button>
 </app-card>
 <app-card title="Rejoindre un serveur" *ngIf="step === 2 && choice === 'JOIN'">
-  Pour rejoindre un serveur, entrez la commande suivante dans le chat du discord :
+  Entrez la commande suivante dans un salon du serveur Discord que vous souhaitez rejoindre :
   <div class="mt-2 w-100 token-container">{{ configService.getCommandPrefix() }}join {{ (serverJoinToken$ | async)?.serverJoinToken }}</div>
   <app-loading [loading]="serverJoinTokenLoading"></app-loading>
   <button class="btn btn-success mt-2" *ngIf="!serverJoinTokenLoading" (click)="onJoin()">C'est fait</button>

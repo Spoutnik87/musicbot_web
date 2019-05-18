@@ -8,8 +8,8 @@ import { ConfigService } from './config.service';
 export class GroupService {
   constructor(private configService: ConfigService, private httpClient: HttpClient) {}
 
-  getAll(): Observable<GroupModel[]> {
-    return this.httpClient.get(`${this.configService.getApiUrl()}/group/list`) as Observable<GroupModel[]>;
+  getByServerId(serverId: string): Observable<GroupModel[]> {
+    return this.httpClient.get(`${this.configService.getApiUrl()}/group/server/${serverId}`) as Observable<GroupModel[]>;
   }
 
   getById(id: string): Observable<GroupModel> {
