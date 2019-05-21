@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { ServerStatusModel } from 'src/app/models/server-status.model';
 import { ServerModel } from 'src/app/models/server.model';
 
 export const CLEAR_SERVERS = 'CLEAR_SERVERS';
@@ -22,6 +23,8 @@ export const UPDATE_SERVER_FAIL = 'UPDATE_SERVER_FAIL';
 export const DELETE_SERVER = 'DELETE_SERVER';
 export const DELETE_SERVER_SUCCESS = 'DELETE_SERVER_SUCCESS';
 export const DELETE_SERVER_FAIL = 'DELETE_SERVER_FAIL';
+
+export const SET_SERVER_STATUS = 'SET_SERVER_STATUS';
 
 export const ADD_SERVERS = 'ADD_SERVERS';
 export const ADD_SERVER = 'ADD_SERVER';
@@ -204,6 +207,21 @@ export class DeleteServerFail implements Action {
   }
 }
 
+export class SetServerStatus implements Action {
+  readonly type = SET_SERVER_STATUS;
+  payload: {
+    id: string;
+    status: ServerStatusModel;
+  };
+
+  constructor(id: string, status: ServerStatusModel) {
+    this.payload = {
+      id,
+      status,
+    };
+  }
+}
+
 export class AddServers implements Action {
   readonly type = ADD_SERVERS;
   payload: ServerModel[];
@@ -239,5 +257,6 @@ export type ServersAction =
   | DeleteServer
   | DeleteServerSuccess
   | DeleteServerFail
+  | SetServerStatus
   | AddServers
   | AddServer;

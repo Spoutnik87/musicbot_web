@@ -1,6 +1,7 @@
 <div class="container mt-5" *ngIf="serverState$ | async as serverState">
   <app-loading class="mt-5 text-center" [loading]="serverState.loading"></app-loading>
-  <ng-container *ngIf="!serverState.loading">
+  <ng-container *ngIf="!serverState.loading && serverState.loaded">
+    <app-server-status [server]="serverState.server"></app-server-status>
     <app-card [title]="'Serveur: ' + serverState.server.name">
       <div class="w-100" *ngIf="serverState.server.linked === false">
         Ce serveur n'est pas lié à une instance Discord. <br />Entrez la commande suivante dans un salon de votre serveur Discord :
@@ -10,7 +11,12 @@
         <button class="btn btn-primary mt-2" (click)="refresh()">Rafraîchir</button>
       </div>
       <div class="w-100" *ngIf="serverState.server.linked">
-        <app-content-list [server]="serverState.server"></app-content-list>
+        <app-content-list
+          [server]="serverState.server"
+          [contents]="contents$ | async"
+          (play)="onPlay($event)"
+          (show)="onShow($event)"
+        ></app-content-list>
       </div>
     </app-card>
   </ng-container>

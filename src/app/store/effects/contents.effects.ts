@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ofType, Actions, Effect } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { ContentService } from 'src/app/services';
 import {
   CreateContent,
@@ -16,10 +16,14 @@ import {
   FetchContent,
   FetchContentFail,
   FetchContentSuccess,
+  FetchContentThumbnail,
+  FetchContentThumbnailFail,
+  FetchContentThumbnailSuccess,
   FetchServerContents,
   FetchServerContentsFail,
   FetchServerContentsSuccess,
   FETCH_CONTENT,
+  FETCH_CONTENT_THUMBNAIL,
   FETCH_SERVER_CONTENTS,
   UpdateContent,
   UpdateContentFail,
@@ -49,6 +53,20 @@ export class ContentsEffects {
       this.contentService.getById(action.payload).pipe(
         mergeMap(content => [new FetchContentSuccess(content)]),
         catchError(error => of(new FetchContentFail(action.payload, error)))
+      )
+    )
+  );
+
+  /**
+   * Mergemap is used to allow concurrent requests.
+   */
+  @Effect()
+  fetchContentThumbnail$ = this.action$.pipe(
+    ofType(FETCH_CONTENT_THUMBNAIL),
+    mergeMap((action: FetchContentThumbnail) =>
+      this.contentService.getThumbnail(action.payload).pipe(
+        mergeMap(thumbnailURL => [new FetchContentThumbnailSuccess(action.payload, thumbnailURL)]),
+        catchError(error => of(new FetchContentThumbnailFail(action.payload, error)))
       )
     )
   );

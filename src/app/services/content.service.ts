@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ContentModel } from '../models/content.model';
 import { ConfigService } from './config.service';
 
 @Injectable()
 export class ContentService {
-  constructor(private configService: ConfigService, private httpClient: HttpClient) {}
+  constructor(private configService: ConfigService, private httpClient: HttpClient, private sanitizer: DomSanitizer) {}
 
   getByServerId(serverId: string): Observable<ContentModel[]> {
-    return this.httpClient.get(`${this.configService.getApiUrl()}/server/${serverId}`) as Observable<ContentModel[]>;
+    return this.httpClient.get(`${this.configService.getApiUrl()}/content/server/${serverId}`) as Observable<ContentModel[]>;
   }
 
   getById(id: string): Observable<ContentModel> {
@@ -70,5 +71,13 @@ export class ContentService {
 
   delete(id: string): Observable<any> {
     return this.httpClient.delete(`${this.configService.getApiUrl()}/content/${id}`);
+  }
+
+  getThumbnail(id: string): Observable<string> {
+    return this.httpClient
+      .get(`${this.configService.getApiUrl()}/content/${id}/thumbnail`, {
+        responseType: 'blob',
+      })
+      .pipe(map(blob => this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(blob)))) as Observable<string>;
   }
 }

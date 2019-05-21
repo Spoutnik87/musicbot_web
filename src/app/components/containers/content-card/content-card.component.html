@@ -1,0 +1,11 @@
+<div class="content-container">
+  <img [src]="content.thumbnailURL" *ngIf="content.thumbnailURL != null" class="content-image" width="200" height="200" />
+  <div class="content-overlay">
+    <div class="text">
+      {{ content.name }}<br />
+      {{ content.duration / 1000 - 0.5 | number: '1.0-0' | duration }}
+    </div>
+    <div class="show" (click)="onShow()"><fa-icon [icon]="faEye" size="4x"></fa-icon></div>
+    <div class="play" (click)="onPlay()"><fa-icon [icon]="faPlay" size="4x"></fa-icon></div>
+  </div>
+</div>

@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { ContentModel } from 'src/app/models/content.model';
+import { ServerStatusModel } from 'src/app/models/server-status.model';
 import { ServerModel } from 'src/app/models/server.model';
 import { IAppState } from 'src/app/store';
 
@@ -12,9 +14,32 @@ export class ContentListComponent {
   @Input()
   server: ServerModel;
 
-  constructor(private store: Store<IAppState>, private router: Router) {}
+  @Input()
+  contents: ContentModel[];
 
-  onCreateContent() {
-    this.router.navigateByUrl(`/create-content/${this.server.id}`);
+  @Output()
+  play = new EventEmitter<{
+    id: string;
+    status: ServerStatusModel;
+  }>();
+
+  @Output()
+  show = new EventEmitter<{
+    id: string;
+    status: ServerStatusModel;
+  }>();
+
+  onPlay(contentId: string) {
+    this.play.emit({
+      id: contentId,
+      status: this.server.status,
+    });
+  }
+
+  onShow(contentId: string) {
+    this.show.emit({
+      id: contentId,
+      status: this.server.status,
+    });
   }
 }

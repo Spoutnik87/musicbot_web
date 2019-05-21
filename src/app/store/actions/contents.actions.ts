@@ -23,6 +23,10 @@ export const DELETE_CONTENT = 'DELETE_CONTENT';
 export const DELETE_CONTENT_SUCCESS = 'DELETE_CONTENT_SUCCESS';
 export const DELETE_CONTENT_FAIL = 'DELETE_CONTENT_FAIL';
 
+export const FETCH_CONTENT_THUMBNAIL = 'FETCH_CONTENT_THUMBNAIL';
+export const FETCH_CONTENT_THUMBNAIL_SUCCESS = 'FETCH_CONTENT_THUMBNAIL_SUCCESS';
+export const FETCH_CONTENT_THUMBNAIL_FAIL = 'FETCH_CONTENT_THUMBNAIL_FAIL';
+
 export const ADD_CONTENTS = 'ADD_CONTENTS';
 export const ADD_CONTENT = 'ADD_CONTENT';
 
@@ -239,6 +243,45 @@ export class DeleteContentFail implements Action {
   }
 }
 
+export class FetchContentThumbnail implements Action {
+  readonly type = FETCH_CONTENT_THUMBNAIL;
+  payload: string;
+
+  constructor(id: string) {
+    this.payload = id;
+  }
+}
+
+export class FetchContentThumbnailSuccess implements Action {
+  readonly type = FETCH_CONTENT_THUMBNAIL_SUCCESS;
+  payload: {
+    id: string;
+    thumbnailURL: string;
+  };
+
+  constructor(id: string, thumbnailURL: string) {
+    this.payload = {
+      id,
+      thumbnailURL,
+    };
+  }
+}
+
+export class FetchContentThumbnailFail implements Action {
+  readonly type = FETCH_CONTENT_THUMBNAIL_FAIL;
+  payload: {
+    id: string;
+    error: any;
+  };
+
+  constructor(id: string, error: any) {
+    this.payload = {
+      id,
+      error,
+    };
+  }
+}
+
 export class AddContents implements Action {
   readonly type = ADD_CONTENTS;
   payload: ContentModel[];
@@ -274,5 +317,8 @@ export type ContentsAction =
   | DeleteContent
   | DeleteContentSuccess
   | DeleteContentFail
+  | FetchContentThumbnail
+  | FetchContentThumbnailSuccess
+  | FetchContentThumbnailFail
   | AddContents
   | AddContent;

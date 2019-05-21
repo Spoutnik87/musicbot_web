@@ -31,6 +31,7 @@ import {
   FETCH_SERVERS_FAIL,
   FETCH_SERVERS_SUCCESS,
   ServersAction,
+  SET_SERVER_STATUS,
   UPDATE_SERVER,
   UPDATE_SERVER_FAIL,
   UPDATE_SERVER_SUCCESS,
@@ -202,18 +203,29 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
       return serversAdapter.upsertOne(
         {
           ...state.entities[action.payload.serverId],
-          commandLoading: true,
-          commandLoaded: false,
+          server: {
+            ...(state.entities[action.payload.serverId] && state.entities[action.payload.serverId].server),
+            id: action.payload.serverId,
+            status: action.payload.status,
+          },
         },
         state
       );
     case PLAY_CONTENT_COMMAND:
     case STOP_CONTENT_COMMAND:
-    case CLEAR_QUEUE_COMMAND:
     case SET_POSITION_COMMAND:
       return serversAdapter.upsertOne(
         {
           ...state.entities[action.payload.serverId],
+          commandLoading: true,
+          commandLoaded: false,
+        },
+        state
+      );
+    case CLEAR_QUEUE_COMMAND:
+      return serversAdapter.upsertOne(
+        {
+          ...state.entities[action.payload],
           commandLoading: true,
           commandLoaded: false,
         },
@@ -240,6 +252,18 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
           ...state.entities[action.payload.serverId],
           commandLoading: false,
           commandLoaded: false,
+        },
+        state
+      );
+    case SET_SERVER_STATUS:
+      return serversAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.id],
+          server: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].server),
+            id: action.payload.id,
+            status: action.payload.status,
+          },
         },
         state
       );

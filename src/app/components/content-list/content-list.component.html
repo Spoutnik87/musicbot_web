@@ -1,8 +1,16 @@
 <div>
   <div>
     Liste des contenus
-    <button class="btn btn-primary mt-2 ml-2 float-right" (click)="onCreateContent()">Ajouter un contenu</button>
+    <a class="btn btn-primary mt-2 ml-2 float-right" [routerLink]="'/create-content/' + server.id">Ajouter un contenu</a>
   </div>
   <hr />
-  <app-content-card></app-content-card>
+  <div class="row">
+    <app-content-card
+      class="col-sm-6 col-md-4 col-lg-3 mb-2"
+      *ngFor="let content of contents"
+      [content]="content"
+      (show)="onShow($event)"
+      (play)="onPlay($event)"
+    ></app-content-card>
+  </div>
 </div>

@@ -8,6 +8,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { Ng5SliderModule } from 'ng5-slider';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,9 +36,13 @@ import { MessageComponent } from './components/message/message.component';
 import { MessagesComponent } from './components/messages/messages.component';
 import { ServerCardComponent } from './components/server-card/server-card.component';
 import { ServerListComponent } from './components/server-list/server-list.component';
+import { ServerStatusSliderComponent } from './components/server-status-slider/server-status-slider.component';
+import { ServerStatusComponent } from './components/server-status/server-status.component';
 import { LetDirective } from './directives/let.directive';
 import { guards } from './guards';
+import { ServerStatusHelper } from './helpers/server-status.helper';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { DurationPipe } from './pipes/duration.pipe';
 import { services } from './services';
 import { effects } from './store/effects';
 import { metaReducers, reducers, CustomSerializer } from './store/reducers';
@@ -73,6 +78,9 @@ export function tokenGetter() {
     CreateCategoryComponent,
     GroupFormComponent,
     CreateGroupComponent,
+    ServerStatusComponent,
+    ServerStatusSliderComponent,
+    DurationPipe,
     LetDirective,
   ],
   imports: [
@@ -82,6 +90,7 @@ export function tokenGetter() {
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule,
+    Ng5SliderModule,
     JwtModule.forRoot({
       config: {
         tokenGetter,
@@ -102,8 +111,10 @@ export function tokenGetter() {
       useClass: AuthInterceptor,
       multi: true,
     },
+    DurationPipe,
     ...services,
     ...guards,
+    ServerStatusHelper,
   ],
   bootstrap: [AppComponent],
 })

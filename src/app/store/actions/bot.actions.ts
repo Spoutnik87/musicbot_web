@@ -156,16 +156,10 @@ export class StopContentCommandFail implements Action {
 
 export class ClearQueueCommand implements Action {
   readonly type = CLEAR_QUEUE_COMMAND;
-  payload: {
-    serverId: string;
-    contentId: string;
-  };
+  payload: string;
 
-  constructor(serverId: string, contentId: string) {
-    this.payload = {
-      serverId,
-      contentId,
-    };
+  constructor(serverId: string) {
+    this.payload = serverId;
   }
 }
 

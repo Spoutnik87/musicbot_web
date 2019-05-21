@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Permission } from 'src/app/enums/Permission';
+import { ContentService } from 'src/app/services';
 import {
   getCategoriesLoaded,
   getCategoriesLoading,
@@ -39,13 +40,65 @@ export class CreateContentComponent {
   loading$ = combineLatest([this.categoriesLoading$, this.groupsLoading$]).pipe(map(([a, b]) => a || b));
   loaded$ = combineLatest([this.categoriesLoaded$, this.groupsLoaded$]).pipe(map(([a, b]) => a && b));
 
-  constructor(private route: ActivatedRoute, private store: Store<IAppState>, private router: Router) {
+  contentId = null;
+  contentCreated = false;
+  contentThumbnailCreated = false;
+  contentMediaCreated = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private store: Store<IAppState>,
+    private contentService: ContentService,
+    private router: Router
+  ) {
     this.store.dispatch(new FetchServerGroups(this.serverId));
     this.store.dispatch(new FetchServerCategories(this.serverId));
   }
 
   onSubmit(event: { name: string; thumbnail: any; media: any; categoryId: string; groupId: string }) {
-    this.store.dispatch(new CreateContent(this.serverId, event.groupId, event.name, event.categoryId, '', event.thumbnail, event.media));
+    const createThumbnail = (contentId: string, thumbnail: any) => {
+      return this.contentService.updateThumbnail(contentId, thumbnail);
+    };
+    const createMedia = (contentId: string, media: any) => {
+      return this.contentService.updateMedia(contentId, media);
+    };
+    if (!this.contentCreated) {
+      this.contentService
+        .create(event.groupId, event.name, event.categoryId, '')
+        .pipe(
+          switchMap(content => {
+            this.contentId = content.id;
+            this.contentCreated = true;
+            return createThumbnail(content.id, event.thumbnail);
+          }),
+          switchMap(content => {
+            this.contentThumbnailCreated = true;
+            return createMedia(content.id, event.media);
+          }),
+          map(content => {
+            this.contentMediaCreated = true;
+            return content;
+          })
+        )
+        .subscribe(() => {}, () => {});
+    } else {
+      if (!this.contentThumbnailCreated) {
+        this.contentService.updateThumbnail(this.contentId, event.thumbnail).subscribe(
+          () => {
+            this.contentThumbnailCreated = true;
+          },
+          () => {}
+        );
+      }
+      if (!this.contentMediaCreated) {
+        this.contentService.updateMedia(this.contentId, event.media).subscribe(
+          () => {
+            this.contentMediaCreated = true;
+          },
+          () => {}
+        );
+      }
+    }
   }
 
   onCancel() {

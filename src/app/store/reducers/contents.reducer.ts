@@ -10,6 +10,7 @@ import {
   FETCH_CONTENT,
   FETCH_CONTENT_FAIL,
   FETCH_CONTENT_SUCCESS,
+  FETCH_CONTENT_THUMBNAIL_SUCCESS,
   FETCH_SERVER_CONTENTS,
   FETCH_SERVER_CONTENTS_FAIL,
   FETCH_SERVER_CONTENTS_SUCCESS,
@@ -143,6 +144,18 @@ export function contentsReducer(state = initialState, action: ContentsAction | S
       );
     case DELETE_CONTENT_SUCCESS:
       return contentsAdapter.removeOne(action.payload.id, state);
+    case FETCH_CONTENT_THUMBNAIL_SUCCESS:
+      return contentsAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.id],
+          content: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].content),
+            id: action.payload.id,
+            thumbnailURL: action.payload.thumbnailURL,
+          },
+        },
+        state
+      );
     case ADD_CONTENTS:
       return contentsAdapter.upsertMany(
         action.payload.map(content => ({

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ServerModel } from '../models/server.model';
 import { ConfigService } from './config.service';
 
@@ -46,15 +47,17 @@ export class ServerService {
     }>;
   }
 
-  updateMedia(media): Observable<ServerModel> {
+  updateThumbnail(id: string, thumbnail: any) {
     const form: FormData = new FormData();
-    form.append('media', media);
-    return this.httpClient.put(`${this.configService.getApiUrl()}/content/media`, form) as Observable<ServerModel>;
+    form.append('file', thumbnail);
+    return this.httpClient.put(`${this.configService.getApiUrl()}/server/${id}/thumbnail`, form) as Observable<ServerModel>;
   }
 
-  updateThumbnail(thumbnail): Observable<ServerModel> {
-    const form: FormData = new FormData();
-    form.append('thumbnail', thumbnail);
-    return this.httpClient.put(`${this.configService.getApiUrl()}/content/thumbnail`, form) as Observable<ServerModel>;
+  getThumbnail(id: string): Observable<string> {
+    return this.httpClient
+      .get(`${this.configService.getApiUrl()}/server/${id}/thumbnail`, {
+        responseType: 'blob',
+      })
+      .pipe(map(blob => URL.createObjectURL(blob))) as Observable<string>;
   }
 }

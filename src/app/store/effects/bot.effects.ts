@@ -67,9 +67,9 @@ export class BotEffects {
   clearQueueCommand$ = this.action$.pipe(
     ofType(CLEAR_QUEUE_COMMAND),
     switchMap((action: ClearQueueCommand) =>
-      this.botService.postClearCommand(action.payload.contentId).pipe(
-        mergeMap(status => [new ClearQueueCommandSuccess(action.payload.serverId, status)]),
-        catchError(error => of(new ClearQueueCommandFail(action.payload.serverId, error)))
+      this.botService.postClearCommand(action.payload).pipe(
+        mergeMap(status => [new ClearQueueCommandSuccess(action.payload, status)]),
+        catchError(error => of(new ClearQueueCommandFail(action.payload, error)))
       )
     )
   );
