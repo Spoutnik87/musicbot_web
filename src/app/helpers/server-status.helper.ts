@@ -80,13 +80,41 @@ const clearQueue = (state: ServerStatusModel): ServerStatusModel => {
 
 const setPlayingContentPosition = (state: ServerStatusModel, position: number): ServerStatusModel => {
   if (state == null) {
-    return state;
+    return null;
   }
   const result: ServerStatusModel = {
     ...state,
     playing: {
       ...state.playing,
       position,
+    },
+  };
+  return result;
+};
+
+const pause = (state: ServerStatusModel) => {
+  if (state == null) {
+    return null;
+  }
+  const result: ServerStatusModel = {
+    ...state,
+    playing: {
+      ...state.playing,
+      paused: true,
+    },
+  };
+  return result;
+};
+
+const resume = (state: ServerStatusModel) => {
+  if (state == null) {
+    return null;
+  }
+  const result: ServerStatusModel = {
+    ...state,
+    playing: {
+      ...state.playing,
+      paused: false,
     },
   };
   return result;
@@ -150,6 +178,16 @@ export class ServerStatusHelper {
 
   setPosition(id: string, status: ServerStatusModel, position: number) {
     const result = setPlayingContentPosition(status, position);
+    this.store.dispatch(new SetServerStatus(id, result));
+  }
+
+  pause(id: string, status: ServerStatusModel) {
+    const result = pause(status);
+    this.store.dispatch(new SetServerStatus(id, result));
+  }
+
+  resume(id: string, status: ServerStatusModel) {
+    const result = resume(status);
     this.store.dispatch(new SetServerStatus(id, result));
   }
 }

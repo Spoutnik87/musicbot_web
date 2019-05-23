@@ -1,9 +1,9 @@
 <div class="container mt-5" *ngIf="serverState$ | async as serverState">
   <app-loading class="mt-5 text-center" [loading]="serverState.loading"></app-loading>
   <ng-container *ngIf="!serverState.loading && serverState.loaded">
-    <app-server-status [server]="serverState.server"></app-server-status>
+    <app-server-status [server]="serverState.server" *ngIf="serverState.server.linked"></app-server-status>
     <app-card [title]="'Serveur: ' + serverState.server.name">
-      <div class="w-100" *ngIf="serverState.server.linked === false">
+      <div class="w-100" *ngIf="!serverState.server.linked">
         Ce serveur n'est pas lié à une instance Discord. <br />Entrez la commande suivante dans un salon de votre serveur Discord :
         <div class="mt-2 w-100 token-container">
           {{ configService.getCommandPrefix() }}link {{ (serverLinkToken$ | async)?.serverLinkToken }}

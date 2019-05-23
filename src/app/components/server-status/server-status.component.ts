@@ -1,10 +1,19 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { faPause, faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
+import { faPause, faPlay, faStepForward, faStop, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import { Store } from '@ngrx/store';
 import { interval, Subscription } from 'rxjs';
 import { ServerStatusHelper } from 'src/app/helpers/server-status.helper';
+import { ContentStatusModel } from 'src/app/models/content-status.model';
 import { ServerModel } from 'src/app/models/server.model';
-import { ClearQueueCommand, FetchServerStatus, IAppState, PlayContentCommand, SetPositionCommand, SetServerStatus } from 'src/app/store';
+import {
+  ClearQueueCommand,
+  FetchServerStatus,
+  IAppState,
+  PauseCommand,
+  ResumeCommand,
+  SetPositionCommand,
+  StopContentCommand,
+} from 'src/app/store';
 
 @Component({
   selector: 'app-server-status',
@@ -15,6 +24,8 @@ export class ServerStatusComponent implements OnInit, OnDestroy {
   faPlay = faPlay;
   faPause = faPause;
   faStop = faStop;
+  faStepForward = faStepForward;
+  faWindowClose = faWindowClose;
 
   @Input()
   server: ServerModel;
@@ -37,13 +48,26 @@ export class ServerStatusComponent implements OnInit, OnDestroy {
     }
   }
 
-  onPlay() {}
-
   onNext(contentId: string) {
     this.serverStatusHelper.playNextContent(this.server.id, this.server.status);
   }
 
-  onStop() {}
+  onResume() {
+    this.store.dispatch(new ResumeCommand(this.server.id));
+    this.serverStatusHelper.resume(this.server.id, this.server.status);
+  }
+
+  onPause() {
+    this.store.dispatch(new PauseCommand(this.server.id));
+    this.serverStatusHelper.pause(this.server.id, this.server.status);
+  }
+
+  onStop(content: ContentStatusModel) {
+    if (content == null) {
+      return;
+    }
+    this.store.dispatch(new StopContentCommand(this.server.id, content.id, content.uid));
+  }
 
   onClear() {
     this.store.dispatch(new ClearQueueCommand(this.server.id));

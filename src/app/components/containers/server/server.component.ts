@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { delay, map, switchMap } from 'rxjs/operators';
 import { ServerStatusHelper } from 'src/app/helpers/server-status.helper';
 import { ServerStatusModel } from 'src/app/models/server-status.model';
-import { ServerService } from 'src/app/services';
+import { ConfigService, ServerService } from 'src/app/services';
 import { getServerContents, getServerState, FetchServer, FetchServerContents, IAppState, PlayContentCommand } from 'src/app/store';
 
 @Component({
@@ -40,6 +40,7 @@ export class ServerComponent {
     private route: ActivatedRoute,
     private store: Store<IAppState>,
     private serverService: ServerService,
+    private configService: ConfigService,
     private serverStatusHelper: ServerStatusHelper
   ) {
     this.store.dispatch(new FetchServer(this.serverId));

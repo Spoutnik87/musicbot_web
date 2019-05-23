@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ChangeContext, LabelType, Options } from 'ng5-slider';
-import { interval, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, delay, first } from 'rxjs/operators';
+import { interval, Subject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { ContentStatusModel } from 'src/app/models/content-status.model';
 import { DurationPipe } from 'src/app/pipes/duration.pipe';
 
@@ -63,15 +63,17 @@ export class ServerStatusSliderComponent implements OnInit, OnDestroy {
       this.value = Math.floor(this.playing.position / 1000);
     }
 
-    this.refreshSubscription = interval(1000).subscribe(() => {
-      this.value++;
-      if (!this.selecting) {
-        this.manualRefresh.emit();
-      }
-      if (this.value >= this._playing.duration / 1000) {
-        this.onEnd(this._playing.id);
-      }
-    });
+    if (!this._playing.paused) {
+      this.refreshSubscription = interval(1000).subscribe(() => {
+        this.value++;
+        if (!this.selecting) {
+          this.manualRefresh.emit();
+        }
+        if (this.value >= this._playing.duration / 1000) {
+          this.onEnd(this._playing.id);
+        }
+      });
+    }
   }
 
   get playing(): ContentStatusModel {

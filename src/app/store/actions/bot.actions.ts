@@ -21,6 +21,14 @@ export const SET_POSITION_COMMAND = 'SET_POSITION_COMMAND';
 export const SET_POSITION_COMMAND_SUCCESS = 'SET_POSITION_COMMAND_SUCCESS';
 export const SET_POSITION_COMMAND_FAIL = 'SET_POSITION_COMMAND_FAIL';
 
+export const PAUSE_COMMAND = 'PAUSE_COMMAND';
+export const PAUSE_COMMAND_SUCCESS = 'PAUSE_COMMAND_SUCCESS';
+export const PAUSE_COMMAND_FAIL = 'PAUSE_COMMAND_FAIL';
+
+export const RESUME_COMMAND = 'RESUME_COMMAND';
+export const RESUME_COMMAND_SUCCESS = 'RESUME_COMMAND_SUCCESS';
+export const RESUME_COMMAND_FAIL = 'RESUME_COMMAND_FAIL';
+
 export class FetchServerStatus implements Action {
   readonly type = FETCH_SERVER_STATUS;
   payload: string;
@@ -112,12 +120,14 @@ export class StopContentCommand implements Action {
   payload: {
     serverId: string;
     contentId: string;
+    uid: string;
   };
 
-  constructor(serverId: string, contentId: string) {
+  constructor(serverId: string, contentId: string, uid: string) {
     this.payload = {
       serverId,
       contentId,
+      uid,
     };
   }
 }
@@ -242,6 +252,84 @@ export class SetPositionCommandFail implements Action {
   }
 }
 
+export class PauseCommand implements Action {
+  readonly type = PAUSE_COMMAND;
+  payload: string;
+
+  constructor(serverId: string) {
+    this.payload = serverId;
+  }
+}
+
+export class PauseCommandSuccess implements Action {
+  readonly type = PAUSE_COMMAND_SUCCESS;
+  payload: {
+    serverId: string;
+    status: ServerStatusModel;
+  };
+
+  constructor(serverId: string, status: ServerStatusModel) {
+    this.payload = {
+      serverId,
+      status,
+    };
+  }
+}
+
+export class PauseCommandFail implements Action {
+  readonly type = PAUSE_COMMAND_FAIL;
+  payload: {
+    serverId: string;
+    error: any;
+  };
+
+  constructor(serverId: string, error: any) {
+    this.payload = {
+      serverId,
+      error,
+    };
+  }
+}
+
+export class ResumeCommand implements Action {
+  readonly type = RESUME_COMMAND;
+  payload: string;
+
+  constructor(serverId: string) {
+    this.payload = serverId;
+  }
+}
+
+export class ResumeCommandSuccess implements Action {
+  readonly type = RESUME_COMMAND_SUCCESS;
+  payload: {
+    serverId: string;
+    status: ServerStatusModel;
+  };
+
+  constructor(serverId: string, status: ServerStatusModel) {
+    this.payload = {
+      serverId,
+      status,
+    };
+  }
+}
+
+export class ResumeCommandFail implements Action {
+  readonly type = RESUME_COMMAND_FAIL;
+  payload: {
+    serverId: string;
+    error: any;
+  };
+
+  constructor(serverId: string, error: any) {
+    this.payload = {
+      serverId,
+      error,
+    };
+  }
+}
+
 export type BotAction =
   | FetchServerStatus
   | FetchServerStatusSuccess
@@ -257,4 +345,10 @@ export type BotAction =
   | ClearQueueCommandFail
   | SetPositionCommand
   | SetPositionCommandSuccess
-  | SetPositionCommandFail;
+  | SetPositionCommandFail
+  | PauseCommand
+  | PauseCommandSuccess
+  | PauseCommandFail
+  | ResumeCommand
+  | ResumeCommandSuccess
+  | ResumeCommandFail;

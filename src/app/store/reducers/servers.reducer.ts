@@ -5,11 +5,16 @@ import {
   CLEAR_QUEUE_COMMAND_FAIL,
   CLEAR_QUEUE_COMMAND_SUCCESS,
   CLEAR_STORE,
-  FETCH_SERVER_STATUS,
   FETCH_SERVER_STATUS_SUCCESS,
+  PAUSE_COMMAND,
+  PAUSE_COMMAND_FAIL,
+  PAUSE_COMMAND_SUCCESS,
   PLAY_CONTENT_COMMAND,
   PLAY_CONTENT_COMMAND_FAIL,
   PLAY_CONTENT_COMMAND_SUCCESS,
+  RESUME_COMMAND,
+  RESUME_COMMAND_FAIL,
+  RESUME_COMMAND_SUCCESS,
   StoreAction,
   SET_POSITION_COMMAND,
   SET_POSITION_COMMAND_FAIL,
@@ -223,6 +228,8 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
         state
       );
     case CLEAR_QUEUE_COMMAND:
+    case PAUSE_COMMAND:
+    case RESUME_COMMAND:
       return serversAdapter.upsertOne(
         {
           ...state.entities[action.payload],
@@ -235,9 +242,16 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
     case STOP_CONTENT_COMMAND_SUCCESS:
     case CLEAR_QUEUE_COMMAND_SUCCESS:
     case SET_POSITION_COMMAND_SUCCESS:
+    case PAUSE_COMMAND_SUCCESS:
+    case RESUME_COMMAND_SUCCESS:
       return serversAdapter.upsertOne(
         {
           ...state.entities[action.payload.serverId],
+          server: {
+            ...(state.entities[action.payload.serverId] && state.entities[action.payload.serverId].server),
+            id: action.payload.serverId,
+            status: action.payload.status,
+          },
           commandLoading: false,
           commandLoaded: true,
         },
@@ -247,6 +261,8 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
     case STOP_CONTENT_COMMAND_FAIL:
     case CLEAR_QUEUE_COMMAND_FAIL:
     case SET_POSITION_COMMAND_FAIL:
+    case PAUSE_COMMAND_FAIL:
+    case RESUME_COMMAND_FAIL:
       return serversAdapter.upsertOne(
         {
           ...state.entities[action.payload.serverId],

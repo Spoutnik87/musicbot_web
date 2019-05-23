@@ -1,4 +1,5 @@
 export interface ContentStatusModel {
+  uid: string;
   id: string;
   name: string;
   initiator: {
@@ -17,4 +18,5 @@ export interface ContentStatusModel {
    * Current track position in millis
    */
   position?: number;
+  paused?: boolean;
 }

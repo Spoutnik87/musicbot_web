@@ -12,10 +12,14 @@ import {
   FetchServerStatusFail,
   FetchServerStatusSuccess,
   FETCH_SERVER_STATUS,
+  PauseCommand,
   PlayContentCommand,
   PlayContentCommandFail,
   PlayContentCommandSuccess,
+  PAUSE_COMMAND,
   PLAY_CONTENT_COMMAND,
+  ResumeCommand,
+  RESUME_COMMAND,
   SetPositionCommand,
   SetPositionCommandFail,
   SetPositionCommandSuccess,
@@ -56,7 +60,7 @@ export class BotEffects {
   stopContentCommand$ = this.action$.pipe(
     ofType(STOP_CONTENT_COMMAND),
     switchMap((action: StopContentCommand) =>
-      this.botService.postStopCommand(action.payload.contentId).pipe(
+      this.botService.postStopCommand(action.payload.contentId, action.payload.uid).pipe(
         mergeMap(status => [new StopContentCommandSuccess(action.payload.serverId, status)]),
         catchError(error => of(new StopContentCommandFail(action.payload.serverId, action.payload.contentId, error)))
       )
@@ -81,6 +85,28 @@ export class BotEffects {
       this.botService.postSetPositionCommand(action.payload.contentId, action.payload.position).pipe(
         mergeMap(status => [new SetPositionCommandSuccess(action.payload.serverId, status)]),
         catchError(error => of(new SetPositionCommandFail(action.payload.serverId, action.payload.contentId, error)))
+      )
+    )
+  );
+
+  @Effect()
+  pauseCommand$ = this.action$.pipe(
+    ofType(PAUSE_COMMAND),
+    switchMap((action: PauseCommand) =>
+      this.botService.postPauseCommand(action.payload).pipe(
+        mergeMap(status => [new ClearQueueCommandSuccess(action.payload, status)]),
+        catchError(error => of(new ClearQueueCommandFail(action.payload, error)))
+      )
+    )
+  );
+
+  @Effect()
+  resumeCommand$ = this.action$.pipe(
+    ofType(RESUME_COMMAND),
+    switchMap((action: ResumeCommand) =>
+      this.botService.postResumeCommand(action.payload).pipe(
+        mergeMap(status => [new ClearQueueCommandSuccess(action.payload, status)]),
+        catchError(error => of(new ClearQueueCommandFail(action.payload, error)))
       )
     )
   );

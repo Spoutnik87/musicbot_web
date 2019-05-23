@@ -16,8 +16,10 @@ export class BotService {
     return this.httpClient.post(`${this.configService.getApiUrl()}/bot/play/${contentId}`, null) as Observable<ServerStatusModel>;
   }
 
-  postStopCommand(contentId: string): Observable<ServerStatusModel> {
-    return this.httpClient.post(`${this.configService.getApiUrl()}/bot/stop/${contentId}`, null) as Observable<ServerStatusModel>;
+  postStopCommand(contentId: string, uid: string): Observable<ServerStatusModel> {
+    return this.httpClient.post(`${this.configService.getApiUrl()}/bot/stop/${contentId}`, {
+      uid,
+    }) as Observable<ServerStatusModel>;
   }
 
   postClearCommand(contentId: string): Observable<ServerStatusModel> {
@@ -28,5 +30,13 @@ export class BotService {
     return this.httpClient.post(`${this.configService.getApiUrl()}/bot/position/${contentId}`, {
       position,
     }) as Observable<ServerStatusModel>;
+  }
+
+  postPauseCommand(contentId: string): Observable<ServerStatusModel> {
+    return this.httpClient.post(`${this.configService.getApiUrl()}/bot/pause/${contentId}`, null) as Observable<ServerStatusModel>;
+  }
+
+  postResumeCommand(contentId: string): Observable<ServerStatusModel> {
+    return this.httpClient.post(`${this.configService.getApiUrl()}/bot/resume/${contentId}`, null) as Observable<ServerStatusModel>;
   }
 }

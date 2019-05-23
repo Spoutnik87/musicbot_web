@@ -8,8 +8,9 @@
     ></app-server-status-slider>
   </div>
   <div class="text-center mt-2 mb-2">
-    <button class="btn btn-dark mt-2 ml-2" (click)="onPlay()"><fa-icon [icon]="faPlay"></fa-icon></button>
-    <button class="btn btn-dark mt-2 ml-2" (click)="onStop()"><fa-icon [icon]="faPause"></fa-icon></button>
+    <button class="btn btn-dark mt-2 ml-2" (click)="onResume()"><fa-icon [icon]="faPlay"></fa-icon></button>
+    <button class="btn btn-dark mt-2 ml-2" (click)="onPause()"><fa-icon [icon]="faPause"></fa-icon></button>
+    <button class="btn btn-dark mt-2 ml-2" (click)="onStop(server.status.playing)"><fa-icon [icon]="faStepForward"></fa-icon></button>
     <button class="btn btn-dark mt-2 ml-2" (click)="onClear()"><fa-icon [icon]="faStop"></fa-icon></button>
   </div>
   <ng-container *ngIf="server.status.queue.length > 0">
@@ -21,6 +22,7 @@
           <th scope="col">Nom</th>
           <th scope="col">Durée</th>
           <th scope="col">Mis dans la file par</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -29,6 +31,11 @@
           <td>{{ contentStatus.name }}</td>
           <td>{{ contentStatus.duration / 1000 - 0.5 | number: '1.0-0' | duration }}</td>
           <td>{{ contentStatus.initiator.nickname }}</td>
+          <td>
+            <button class="btn btn-dark mt-2 ml-2" (click)="onStop(contentStatus)">
+              <fa-icon [icon]="faWindowClose"></fa-icon>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
