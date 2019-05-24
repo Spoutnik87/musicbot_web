@@ -79,6 +79,7 @@ export class ContentsEffects {
         .create(
           action.payload.groupId,
           action.payload.name,
+          action.payload.description,
           action.payload.categoryId,
           action.payload.contentTypeId,
           action.payload.thumbnail,

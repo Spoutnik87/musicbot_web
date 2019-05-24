@@ -3,7 +3,8 @@ import { GroupModel } from './group.model';
 export interface ContentModel {
   id: string;
   name: string;
-  extension?: string;
+  description: string;
+  mimeType?: string;
   mediaSize?: number;
   thumbnailSize?: number;
   media: boolean;

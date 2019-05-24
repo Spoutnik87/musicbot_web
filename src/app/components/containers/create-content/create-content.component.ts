@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Permission } from 'src/app/enums/Permission';
 import { ContentService } from 'src/app/services';
@@ -55,21 +55,28 @@ export class CreateContentComponent {
     this.store.dispatch(new FetchServerCategories(this.serverId));
   }
 
-  onSubmit(event: { name: string; thumbnail: any; media: any; categoryId: string; groupId: string }) {
+  onSubmit(event: { name: string; description: string; thumbnail: any; media: any; categoryId: string; groupId: string }) {
     const createThumbnail = (contentId: string, thumbnail: any) => {
       return this.contentService.updateThumbnail(contentId, thumbnail);
     };
     const createMedia = (contentId: string, media: any) => {
       return this.contentService.updateMedia(contentId, media);
     };
+    /**
+     * Thumbnail is optionnal. Don't send it if thumbnail is null.
+     */
     if (!this.contentCreated) {
       this.contentService
-        .create(event.groupId, event.name, event.categoryId, '')
+        .create(event.groupId, event.name, event.description, event.categoryId, '')
         .pipe(
           switchMap(content => {
             this.contentId = content.id;
             this.contentCreated = true;
-            return createThumbnail(content.id, event.thumbnail);
+            if (event.thumbnail == null) {
+              return of(content);
+            } else {
+              return createThumbnail(content.id, event.thumbnail);
+            }
           }),
           switchMap(content => {
             this.contentThumbnailCreated = true;
@@ -80,12 +87,18 @@ export class CreateContentComponent {
             return content;
           })
         )
-        .subscribe(() => {}, () => {});
+        .subscribe(
+          () => {
+            this.onFinish();
+          },
+          () => {}
+        );
     } else {
       if (!this.contentThumbnailCreated) {
         this.contentService.updateThumbnail(this.contentId, event.thumbnail).subscribe(
           () => {
             this.contentThumbnailCreated = true;
+            this.onFinish();
           },
           () => {}
         );
@@ -94,6 +107,7 @@ export class CreateContentComponent {
         this.contentService.updateMedia(this.contentId, event.media).subscribe(
           () => {
             this.contentMediaCreated = true;
+            this.onFinish();
           },
           () => {}
         );
@@ -103,5 +117,11 @@ export class CreateContentComponent {
 
   onCancel() {
     this.router.navigateByUrl(`/server/${this.serverId}`);
+  }
+
+  onFinish() {
+    if (this.contentCreated && this.contentThumbnailCreated && this.contentMediaCreated) {
+      this.router.navigateByUrl(`/server/${this.serverId}`);
+    }
   }
 }

@@ -4,6 +4,10 @@
     <input type="text" class="form-control" name="name" id="name" [(ngModel)]="content.name" placeholder="Nom" />
   </div>
   <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control rounded-0" id="description" rows="3" [(ngModel)]="content.description"></textarea>
+  </div>
+  <div class="form-group">
     <label for="group">Groupe</label>
     <select class="form-control" id="group" [(ngModel)]="content.groupId">
       <option *ngFor="let group of groups" [ngValue]="group.id">{{ group.name }}</option>
@@ -24,21 +28,29 @@
   <button class="btn btn-success mt-2" (click)="onSubmit()">Suivant</button>
   <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour</button>
 </app-card>
-<app-card title="Choisir une icone" *ngIf="step === 2">
+<app-card title="Choisir une icone (optionnel)" *ngIf="step === 2">
   <div class="form-group">
     <div *ngIf="content.thumbnail">
       <img [src]="content.thumbnail" width="200" height="200" />
     </div>
     <input type="file" style="display: none" accept="image/png,image/jpeg" (change)="onFileChange($event)" #thumbnailInput />
-    <button class="btn btn-primary mt-2" (click)="thumbnailInput.click()">Choisir une icone</button>
+    <button class="btn btn-primary mt-2" (click)="thumbnailInput.click()" *ngIf="content.thumbnail == null">Choisir une icone</button>
+    <button class="btn btn-danger mt-2 ml-1" (click)="onRemoveThumbnail()" *ngIf="content.thumbnail != null">Supprimer</button>
   </div>
-  <button class="btn btn-success mt-2" (click)="onSubmit()" [disabled]="content.thumbnail == null">Suivant</button>
+  <button class="btn btn-success mt-2" (click)="onSubmit()">Suivant</button>
   <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour</button>
 </app-card>
 <app-card title="Choisir un media" *ngIf="step === 3">
   <div class="form-group">
+    <div *ngIf="content.media">
+      <audio controls>
+        <source [src]="content.media" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
     <input type="file" style="display: none" accept="audio/mpeg" (change)="onFileChange($event)" #mediaInput />
-    <button class="btn btn-primary mt-2" (click)="mediaInput.click()">Choisir un media</button>
+    <button class="btn btn-primary mt-2" (click)="mediaInput.click()" *ngIf="content.media == null">Choisir un media</button>
+    <button class="btn btn-danger mt-2 ml-1" (click)="onRemoveMedia()" *ngIf="content.media != null">Supprimer</button>
   </div>
   <app-loading [loading]="loading"></app-loading>
   <button class="btn btn-success mt-2" *ngIf="!loading" (click)="onSubmit()" [disabled]="content.media == null">Créer</button>

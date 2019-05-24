@@ -21,6 +21,7 @@ export class ContentService {
   create(
     groupId: string,
     name: string,
+    description: string,
     categoryId: string,
     contentTypeId: string,
     thumbnail: any = null,
@@ -30,6 +31,7 @@ export class ContentService {
       return this.httpClient.post(`${this.configService.getApiUrl()}/content`, {
         groupId,
         name,
+        description,
         categoryId,
         contentTypeId,
       }) as Observable<ContentModel>;

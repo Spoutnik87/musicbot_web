@@ -112,17 +112,28 @@ export class CreateContent implements Action {
     serverId: string;
     groupId: string;
     name: string;
+    description: string;
     categoryId: string;
     contentTypeId: string;
     thumbnail: any;
     media: any;
   };
 
-  constructor(serverId: string, groupId: string, name: string, categoryId: string, contentTypeId: string, thumbnail: any, media: any) {
+  constructor(
+    serverId: string,
+    groupId: string,
+    name: string,
+    description: string,
+    categoryId: string,
+    contentTypeId: string,
+    thumbnail: any,
+    media: any
+  ) {
     this.payload = {
       serverId,
       groupId,
       name,
+      description,
       categoryId,
       contentTypeId,
       thumbnail,

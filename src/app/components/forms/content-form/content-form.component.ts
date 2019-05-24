@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CategoryModel } from 'src/app/models/category.model';
 import { GroupModel } from 'src/app/models/group.model';
 
@@ -25,6 +25,7 @@ export class ContentFormComponent {
   @Output()
   submit = new EventEmitter<{
     name: string;
+    description: string;
     categoryId: string;
     groupId: string;
     thumbnail: any;
@@ -36,6 +37,7 @@ export class ContentFormComponent {
 
   content: {
     name: string;
+    description: string;
     categoryId: string;
     groupId: string;
     thumbnail?: any;
@@ -44,11 +46,12 @@ export class ContentFormComponent {
     mediaFile?: any;
   };
 
-  constructor() {
+  constructor(private sanitizer: DomSanitizer) {
     this.content = {
       categoryId: '',
       groupId: '',
       name: '',
+      description: '',
     };
   }
 
@@ -66,6 +69,7 @@ export class ContentFormComponent {
     } else {
       this.submit.emit({
         name: this.content.name,
+        description: this.content.description,
         categoryId: this.content.categoryId,
         groupId: this.content.groupId,
         thumbnail: this.content.thumbnailFile,
@@ -92,11 +96,21 @@ export class ContentFormComponent {
       this.content.mediaFile = file;
       const reader = new FileReader();
       reader.addEventListener('loadend', () => {
-        this.content.media = reader.result;
+        this.content.media = this.sanitizer.bypassSecurityTrustResourceUrl(reader.result as string);
       });
       if (file) {
         reader.readAsDataURL(file);
       }
     }
+  }
+
+  onRemoveThumbnail() {
+    this.content.thumbnail = null;
+    this.content.thumbnailFile = null;
+  }
+
+  onRemoveMedia() {
+    this.content.media = null;
+    this.content.mediaFile = null;
   }
 }
