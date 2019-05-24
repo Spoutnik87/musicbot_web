@@ -1,4 +1,5 @@
 import { createSelector } from '@ngrx/store';
+import { CategoryModel } from 'src/app/models/category.model';
 import { IAppState } from '../reducers';
 import * as fromCategories from '../reducers/categories.reducer';
 
@@ -7,6 +8,11 @@ export const getCategoriesState = (state: IAppState) => state.categories;
 export const getCategories = createSelector(
   getCategoriesState,
   fromCategories.getCategories
+);
+
+export const getServerCategories = createSelector(
+  getCategories,
+  (categories: CategoryModel[], props: { serverId: string }) => categories.filter(category => category.serverId === props.serverId)
 );
 
 export const getCategoriesLoading = createSelector(
@@ -21,7 +27,7 @@ export const getCategoriesLoaded = createSelector(
 
 export const getCategoryState = createSelector(
   getCategoriesState,
-  (categoriesState: fromCategories.ICategoriesState, props: { id: number }) => categoriesState.entities[props.id]
+  (categoriesState: fromCategories.ICategoriesState, props: { id: string }) => categoriesState.entities[props.id]
 );
 
 export const getCategory = createSelector(

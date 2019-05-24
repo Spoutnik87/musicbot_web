@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { ofType, Actions, Effect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, mergeMap, switchMap } from 'rxjs/operators';
@@ -13,13 +14,13 @@ import {
   DeleteServerSuccess,
   DELETE_SERVER,
   FetchServer,
+  FetchServers,
   FetchServersFail,
   FetchServersSuccess,
   FetchServerFail,
   FetchServerSuccess,
   FETCH_SERVER,
   FETCH_SERVERS,
-  ServersAction,
   UpdateServer,
   UpdateServerFail,
   UpdateServerSuccess,
@@ -28,12 +29,12 @@ import {
 
 @Injectable()
 export class ServersEffects {
-  constructor(private action$: Actions, private serverService: ServerService) {}
+  constructor(private action$: Actions, private serverService: ServerService, private router: Router) {}
 
   @Effect()
   fetchServers$ = this.action$.pipe(
     ofType(FETCH_SERVERS),
-    switchMap((action: ServersAction) =>
+    switchMap((action: FetchServers) =>
       this.serverService.getAll().pipe(
         mergeMap(servers => [new FetchServersSuccess(servers)]),
         catchError(error => of(new FetchServersFail(error)))
@@ -57,7 +58,10 @@ export class ServersEffects {
     ofType(CREATE_SERVER),
     switchMap((action: CreateServer) =>
       this.serverService.create(action.payload.name).pipe(
-        mergeMap(server => [new CreateServerSuccess(server)]),
+        mergeMap(server => {
+          this.router.navigateByUrl('');
+          return [new CreateServerSuccess(server)];
+        }),
         catchError(error => of(new CreateServerFail(error)))
       )
     )

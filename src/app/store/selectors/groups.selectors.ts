@@ -1,4 +1,5 @@
 import { createSelector } from '@ngrx/store';
+import { GroupModel } from 'src/app/models/group.model';
 import { IAppState } from '../reducers';
 import * as fromGroups from '../reducers/groups.reducer';
 
@@ -7,6 +8,11 @@ export const getGroupsState = (state: IAppState) => state.groups;
 export const getGroups = createSelector(
   getGroupsState,
   fromGroups.getGroups
+);
+
+export const getServerGroups = createSelector(
+  getGroups,
+  (groups: GroupModel[], props: { serverId: string }) => groups.filter(group => group.serverId === props.serverId)
 );
 
 export const getGroupsLoading = createSelector(
@@ -21,7 +27,7 @@ export const getGroupsLoaded = createSelector(
 
 export const getGroupState = createSelector(
   getGroupsState,
-  (groupsState: fromGroups.IGroupsState, props: { id: number }) => groupsState.entities[props.id]
+  (groupsState: fromGroups.IGroupsState, props: { id: string }) => groupsState.entities[props.id]
 );
 
 export const getGroup = createSelector(

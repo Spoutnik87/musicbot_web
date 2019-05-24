@@ -21,7 +21,7 @@ export const getRolesLoaded = createSelector(
 
 export const getRoleState = createSelector(
   getRolesState,
-  (rolesState: fromRoles.IRolesState, props: { id: number }) => rolesState.entities[props.id]
+  (rolesState: fromRoles.IRolesState, props: { id: string }) => rolesState.entities[props.id]
 );
 
 export const getRole = createSelector(

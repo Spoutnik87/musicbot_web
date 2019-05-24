@@ -21,7 +21,7 @@ export const getServersLoaded = createSelector(
 
 export const getServerState = createSelector(
   getServersState,
-  (serversState: fromServers.IServersState, props: { id: number }) => serversState.entities[props.id]
+  (serversState: fromServers.IServersState, props: { id: string }) => serversState.entities[props.id]
 );
 
 export const getServer = createSelector(

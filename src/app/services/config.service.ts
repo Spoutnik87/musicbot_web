@@ -8,4 +8,8 @@ export class ConfigService {
   isProduction(): boolean {
     return environment.production;
   }
+
+  getCommandPrefix(): string {
+    return environment.commandPrefix;
+  }
 }

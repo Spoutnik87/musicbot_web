@@ -61,4 +61,15 @@ export class UserService {
   delete(id: string): Observable<any> {
     return this.httpClient.delete(`${this.configService.getApiUrl()}/user/${id}`) as Observable<any>;
   }
+
+  /**
+   * Generate a token that must be entered in the discord server that the user want to join.
+   */
+  getServerJoinToken(): Observable<{
+    serverJoinToken: string;
+  }> {
+    return this.httpClient.get(`${this.configService.getApiUrl()}/user/serverJoinToken`) as Observable<{
+      serverJoinToken: string;
+    }>;
+  }
 }

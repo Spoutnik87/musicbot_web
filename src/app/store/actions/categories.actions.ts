@@ -3,9 +3,9 @@ import { CategoryModel } from 'src/app/models/category.model';
 
 export const CLEAR_CATEGORIES = 'CLEAR_CATEGORIES';
 
-export const FETCH_CATEGORIES = 'FETCH_CATEGORIES';
-export const FETCH_CATEGORIES_SUCCESS = 'FETCH_CATEGORIES_SUCCESS';
-export const FETCH_CATEGORIES_FAIL = 'FETCH_CATEGORIES_FAIL';
+export const FETCH_SERVER_CATEGORIES = 'FETCH_SERVER_CATEGORIES';
+export const FETCH_SERVER_CATEGORIES_SUCCESS = 'FETCH_SERVER_CATEGORIES_SUCCESS';
+export const FETCH_SERVER_CATEGORIES_FAIL = 'FETCH_SERVER_CATEGORIES_FAIL';
 
 export const FETCH_CATEGORY = 'FETCH_CATEGORY';
 export const FETCH_CATEGORY_SUCCESS = 'FETCH_CATEGORY_SUCCESS';
@@ -30,25 +30,42 @@ export class ClearCategories implements Action {
   readonly type = CLEAR_CATEGORIES;
 }
 
-export class FetchCategories implements Action {
-  readonly type = FETCH_CATEGORIES;
-}
+export class FetchServerCategories implements Action {
+  readonly type = FETCH_SERVER_CATEGORIES;
+  payload: string;
 
-export class FetchCategoriesSuccess implements Action {
-  readonly type = FETCH_CATEGORIES_SUCCESS;
-  payload: CategoryModel[];
-
-  constructor(categories: CategoryModel[]) {
-    this.payload = categories;
+  constructor(serverId: string) {
+    this.payload = serverId;
   }
 }
 
-export class FetchCategoriesFail implements Action {
-  readonly type = FETCH_CATEGORIES_FAIL;
-  payload: any;
+export class FetchServerCategoriesSuccess implements Action {
+  readonly type = FETCH_SERVER_CATEGORIES_SUCCESS;
+  payload: {
+    serverId: string;
+    categories: CategoryModel[];
+  };
 
-  constructor(error: any) {
-    this.payload = error;
+  constructor(serverId: string, categories: CategoryModel[]) {
+    this.payload = {
+      serverId,
+      categories,
+    };
+  }
+}
+
+export class FetchServerCategoriesFail implements Action {
+  readonly type = FETCH_SERVER_CATEGORIES_FAIL;
+  payload: {
+    serverId: string;
+    error: any;
+  };
+
+  constructor(serverId: string, error: any) {
+    this.payload = {
+      serverId,
+      error,
+    };
   }
 }
 
@@ -228,9 +245,9 @@ export class AddCategory implements Action {
 
 export type CategoriesAction =
   | ClearCategories
-  | FetchCategories
-  | FetchCategoriesSuccess
-  | FetchCategoriesFail
+  | FetchServerCategories
+  | FetchServerCategoriesSuccess
+  | FetchServerCategoriesFail
   | FetchCategory
   | FetchCategorySuccess
   | FetchCategoryFail

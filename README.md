@@ -1,3 +1,5 @@
+[![Build Status](https://jenkins.spout.cc/buildStatus/icon?job=musicbotWeb)](https://jenkins.spout.cc/job/musicbotWeb/)
+
 # MusicbotWeb
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.

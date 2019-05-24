@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { Permission } from 'src/app/enums/Permission';
 import { UserModel } from '../../models/user.model';
 
 export const CLEAR_USERS = 'CLEAR_USERS';
@@ -226,7 +227,7 @@ export class UpdateUserFail implements Action {
     error: any;
   };
 
-  constructor(id: string, error: any) {
+  constructor(id: string, error: Permission) {
     this.payload = {
       id,
       error,

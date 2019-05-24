@@ -1,5 +1,5 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { ClearStore, CLEAR_STORE, StoreAction } from '../actions';
+import { CLEAR_STORE, StoreAction } from '../actions';
 import {
   ADD_CATEGORIES,
   ADD_CATEGORY,
@@ -7,12 +7,12 @@ import {
   CLEAR_CATEGORIES,
   CREATE_CATEGORY_SUCCESS,
   DELETE_CATEGORY_SUCCESS,
-  FETCH_CATEGORIES,
-  FETCH_CATEGORIES_FAIL,
-  FETCH_CATEGORIES_SUCCESS,
   FETCH_CATEGORY,
   FETCH_CATEGORY_FAIL,
   FETCH_CATEGORY_SUCCESS,
+  FETCH_SERVER_CATEGORIES,
+  FETCH_SERVER_CATEGORIES_FAIL,
+  FETCH_SERVER_CATEGORIES_SUCCESS,
   UPDATE_CATEGORY,
   UPDATE_CATEGORY_FAIL,
   UPDATE_CATEGORY_SUCCESS,
@@ -42,16 +42,16 @@ const initialState: ICategoriesState = categoriesAdapter.getInitialState({
 
 export function categoriesReducer(state = initialState, action: CategoriesAction | StoreAction): ICategoriesState {
   switch (action.type) {
-    case FETCH_CATEGORIES:
+    case FETCH_SERVER_CATEGORIES:
       return {
         ...state,
         loading: true,
         loaded: false,
       };
-    case FETCH_CATEGORIES_SUCCESS:
+    case FETCH_SERVER_CATEGORIES_SUCCESS:
       return {
         ...categoriesAdapter.addAll(
-          action.payload.map(category => ({
+          action.payload.categories.map(category => ({
             category,
             loading: false,
             loaded: true,
@@ -63,7 +63,7 @@ export function categoriesReducer(state = initialState, action: CategoriesAction
         loading: false,
         loaded: true,
       };
-    case FETCH_CATEGORIES_FAIL:
+    case FETCH_SERVER_CATEGORIES_FAIL:
       return {
         ...state,
         loading: false,

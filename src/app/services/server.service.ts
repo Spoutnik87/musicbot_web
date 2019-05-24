@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ServerModel } from '../models/server.model';
 import { ConfigService } from './config.service';
 
@@ -30,5 +31,33 @@ export class ServerService {
 
   delete(id: string): Observable<any> {
     return this.httpClient.delete(`${this.configService.getApiUrl()}/server/${id}`);
+  }
+
+  /**
+   * Generate a token that must be entered in a discord server to link the server identified by @id
+   * @param id Server id
+   */
+  getServerLinkToken(
+    id: string
+  ): Observable<{
+    serverLinkToken: string;
+  }> {
+    return this.httpClient.get(`${this.configService.getApiUrl()}/server/link/${id}`) as Observable<{
+      serverLinkToken: string;
+    }>;
+  }
+
+  updateThumbnail(id: string, thumbnail: any) {
+    const form: FormData = new FormData();
+    form.append('file', thumbnail);
+    return this.httpClient.put(`${this.configService.getApiUrl()}/server/${id}/thumbnail`, form) as Observable<ServerModel>;
+  }
+
+  getThumbnail(id: string): Observable<string> {
+    return this.httpClient
+      .get(`${this.configService.getApiUrl()}/server/${id}/thumbnail`, {
+        responseType: 'blob',
+      })
+      .pipe(map(blob => URL.createObjectURL(blob))) as Observable<string>;
   }
 }

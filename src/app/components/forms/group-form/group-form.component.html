@@ -1,0 +1,8 @@
+<app-card title="Nouveau groupe">
+  <div class="form-group">
+    <label for="name">Nom</label>
+    <input type="text" class="form-control" name="name" id="name" [(ngModel)]="group.name" placeholder="Nom" />
+  </div>
+  <button class="btn btn-success mt-2" (click)="onSubmit()">Créer</button>
+  <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour</button>
+</app-card>

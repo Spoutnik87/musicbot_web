@@ -3,9 +3,9 @@ import { GroupModel } from 'src/app/models/group.model';
 
 export const CLEAR_GROUPS = 'CLEAR_GROUPS';
 
-export const FETCH_GROUPS = 'FETCH_GROUPS';
-export const FETCH_GROUPS_SUCCESS = 'FETCH_GROUPS_SUCCESS';
-export const FETCH_GROUPS_FAIL = 'FETCH_GROUPS_FAIL';
+export const FETCH_SERVER_GROUPS = 'FETCH_SERVER_GROUPS';
+export const FETCH_SERVER_GROUPS_SUCCESS = 'FETCH_SERVER_GROUPS_SUCCESS';
+export const FETCH_SERVER_GROUPS_FAIL = 'FETCH_SERVER_GROUPS_FAIL';
 
 export const FETCH_GROUP = 'FETCH_GROUP';
 export const FETCH_GROUP_SUCCESS = 'FETCH_GROUP_SUCCESS';
@@ -30,25 +30,42 @@ export class ClearGroups implements Action {
   readonly type = CLEAR_GROUPS;
 }
 
-export class FetchGroups implements Action {
-  readonly type = FETCH_GROUPS;
-}
+export class FetchServerGroups implements Action {
+  readonly type = FETCH_SERVER_GROUPS;
+  payload: string;
 
-export class FetchGroupsSuccess implements Action {
-  readonly type = FETCH_GROUPS_SUCCESS;
-  payload: GroupModel[];
-
-  constructor(groups: GroupModel[]) {
-    this.payload = groups;
+  constructor(serverId: string) {
+    this.payload = serverId;
   }
 }
 
-export class FetchGroupsFail implements Action {
-  readonly type = FETCH_GROUPS_FAIL;
-  payload: any;
+export class FetchServerGroupsSuccess implements Action {
+  readonly type = FETCH_SERVER_GROUPS_SUCCESS;
+  payload: {
+    serverId: string;
+    groups: GroupModel[];
+  };
 
-  constructor(error: any) {
-    this.payload = error;
+  constructor(serverId: string, groups: GroupModel[]) {
+    this.payload = {
+      serverId,
+      groups,
+    };
+  }
+}
+
+export class FetchServerGroupsFail implements Action {
+  readonly type = FETCH_SERVER_GROUPS_FAIL;
+  payload: {
+    serverId: string;
+    error: any;
+  };
+
+  constructor(serverId: string, error: any) {
+    this.payload = {
+      serverId,
+      error,
+    };
   }
 }
 
@@ -228,9 +245,9 @@ export class AddGroup implements Action {
 
 export type GroupsAction =
   | ClearGroups
-  | FetchGroups
-  | FetchGroupsSuccess
-  | FetchGroupsFail
+  | FetchServerGroups
+  | FetchServerGroupsSuccess
+  | FetchServerGroupsFail
   | FetchGroup
   | FetchGroupSuccess
   | FetchGroupFail

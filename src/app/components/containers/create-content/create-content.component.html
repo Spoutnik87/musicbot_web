@@ -1,0 +1,11 @@
+<div class="container mt-5" *appLet="loading$ | async as fetching">
+  <app-loading class="text-center" [loading]="fetching"></app-loading>
+  <app-content-form
+    [categories]="categories$ | async"
+    [groups]="groups$ | async"
+    [serverId]="serverId"
+    (submit)="onSubmit($event)"
+    [loading]="loading"
+    *ngIf="!fetching && (loaded$ | async)"
+  ></app-content-form>
+</div>

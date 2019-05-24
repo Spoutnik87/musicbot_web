@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { ofType, Actions, Effect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, mergeMap, switchMap } from 'rxjs/operators';
 import { CategoryService } from 'src/app/services';
 import {
-  CategoriesAction,
   CreateCategory,
   CreateCategoryFail,
   CreateCategorySuccess,
@@ -13,13 +13,14 @@ import {
   DeleteCategoryFail,
   DeleteCategorySuccess,
   DELETE_CATEGORY,
-  FetchCategoriesFail,
-  FetchCategoriesSuccess,
   FetchCategory,
   FetchCategoryFail,
   FetchCategorySuccess,
-  FETCH_CATEGORIES,
+  FetchServerCategories,
+  FetchServerCategoriesFail,
+  FetchServerCategoriesSuccess,
   FETCH_CATEGORY,
+  FETCH_SERVER_CATEGORIES,
   UpdateCategory,
   UpdateCategoryFail,
   UpdateCategorySuccess,
@@ -28,15 +29,15 @@ import {
 
 @Injectable()
 export class CategoriesEffects {
-  constructor(private action$: Actions, private categoryService: CategoryService) {}
+  constructor(private action$: Actions, private categoryService: CategoryService, private router: Router) {}
 
   @Effect()
-  fetchCategories$ = this.action$.pipe(
-    ofType(FETCH_CATEGORIES),
-    switchMap((action: CategoriesAction) =>
-      this.categoryService.getAll().pipe(
-        mergeMap(categories => [new FetchCategoriesSuccess(categories)]),
-        catchError(error => of(new FetchCategoriesFail(error)))
+  fetchServerCategories$ = this.action$.pipe(
+    ofType(FETCH_SERVER_CATEGORIES),
+    switchMap((action: FetchServerCategories) =>
+      this.categoryService.getByServerId(action.payload).pipe(
+        mergeMap(categories => [new FetchServerCategoriesSuccess(action.payload, categories)]),
+        catchError(error => of(new FetchServerCategoriesFail(action.payload, error)))
       )
     )
   );
@@ -57,7 +58,10 @@ export class CategoriesEffects {
     ofType(CREATE_CATEGORY),
     switchMap((action: CreateCategory) =>
       this.categoryService.create(action.payload.serverId, action.payload.name).pipe(
-        mergeMap(category => [new CreateCategorySuccess(category)]),
+        mergeMap(category => {
+          this.router.navigateByUrl(`/server/${action.payload.serverId}`);
+          return [new CreateCategorySuccess(category)];
+        }),
         catchError(error => of(new CreateCategoryFail(error)))
       )
     )

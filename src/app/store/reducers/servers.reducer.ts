@@ -1,5 +1,28 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { CLEAR_STORE, StoreAction } from '../actions';
+import {
+  BotAction,
+  CLEAR_QUEUE_COMMAND,
+  CLEAR_QUEUE_COMMAND_FAIL,
+  CLEAR_QUEUE_COMMAND_SUCCESS,
+  CLEAR_STORE,
+  FETCH_SERVER_STATUS_SUCCESS,
+  PAUSE_COMMAND,
+  PAUSE_COMMAND_FAIL,
+  PAUSE_COMMAND_SUCCESS,
+  PLAY_CONTENT_COMMAND,
+  PLAY_CONTENT_COMMAND_FAIL,
+  PLAY_CONTENT_COMMAND_SUCCESS,
+  RESUME_COMMAND,
+  RESUME_COMMAND_FAIL,
+  RESUME_COMMAND_SUCCESS,
+  StoreAction,
+  SET_POSITION_COMMAND,
+  SET_POSITION_COMMAND_FAIL,
+  SET_POSITION_COMMAND_SUCCESS,
+  STOP_CONTENT_COMMAND,
+  STOP_CONTENT_COMMAND_FAIL,
+  STOP_CONTENT_COMMAND_SUCCESS,
+} from '../actions';
 import {
   ADD_SERVER,
   ADD_SERVERS,
@@ -13,6 +36,7 @@ import {
   FETCH_SERVERS_FAIL,
   FETCH_SERVERS_SUCCESS,
   ServersAction,
+  SET_SERVER_STATUS,
   UPDATE_SERVER,
   UPDATE_SERVER_FAIL,
   UPDATE_SERVER_SUCCESS,
@@ -29,6 +53,8 @@ export interface IServerState {
   loaded: boolean;
   updating: boolean;
   updated: boolean;
+  commandLoading: boolean;
+  commandLoaded: boolean;
 }
 
 export const serversAdapter: EntityAdapter<IServerState> = createEntityAdapter<IServerState>({
@@ -40,7 +66,7 @@ const initialState: IServersState = serversAdapter.getInitialState({
   loaded: false,
 });
 
-export function serversReducer(state = initialState, action: ServersAction | StoreAction): IServersState {
+export function serversReducer(state = initialState, action: ServersAction | StoreAction | BotAction): IServersState {
   switch (action.type) {
     case FETCH_SERVERS:
       return {
@@ -57,6 +83,8 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
             loaded: true,
             updating: false,
             updated: false,
+            commandLoading: false,
+            commandLoaded: false,
           })),
           state
         ),
@@ -80,6 +108,8 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
           loaded: false,
           updating: false,
           updated: false,
+          commandLoading: false,
+          commandLoaded: false,
         },
         state
       );
@@ -110,6 +140,8 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
           loaded: true,
           updating: false,
           updated: false,
+          commandLoading: false,
+          commandLoaded: false,
         },
         state
       );
@@ -151,6 +183,8 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
           loaded: true,
           updating: false,
           updated: false,
+          commandLoading: false,
+          commandLoaded: false,
         })),
         state
       );
@@ -162,12 +196,93 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
           loaded: true,
           updating: false,
           updated: false,
+          commandLoading: false,
+          commandLoaded: false,
         },
         state
       );
     case CLEAR_STORE:
     case CLEAR_SERVERS:
       return serversAdapter.removeAll(state);
+    case FETCH_SERVER_STATUS_SUCCESS:
+      return serversAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.serverId],
+          server: {
+            ...(state.entities[action.payload.serverId] && state.entities[action.payload.serverId].server),
+            id: action.payload.serverId,
+            status: action.payload.status,
+          },
+        },
+        state
+      );
+    case PLAY_CONTENT_COMMAND:
+    case STOP_CONTENT_COMMAND:
+    case SET_POSITION_COMMAND:
+      return serversAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.serverId],
+          commandLoading: true,
+          commandLoaded: false,
+        },
+        state
+      );
+    case CLEAR_QUEUE_COMMAND:
+    case PAUSE_COMMAND:
+    case RESUME_COMMAND:
+      return serversAdapter.upsertOne(
+        {
+          ...state.entities[action.payload],
+          commandLoading: true,
+          commandLoaded: false,
+        },
+        state
+      );
+    case PLAY_CONTENT_COMMAND_SUCCESS:
+    case STOP_CONTENT_COMMAND_SUCCESS:
+    case CLEAR_QUEUE_COMMAND_SUCCESS:
+    case SET_POSITION_COMMAND_SUCCESS:
+    case PAUSE_COMMAND_SUCCESS:
+    case RESUME_COMMAND_SUCCESS:
+      return serversAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.serverId],
+          server: {
+            ...(state.entities[action.payload.serverId] && state.entities[action.payload.serverId].server),
+            id: action.payload.serverId,
+            status: action.payload.status,
+          },
+          commandLoading: false,
+          commandLoaded: true,
+        },
+        state
+      );
+    case PLAY_CONTENT_COMMAND_FAIL:
+    case STOP_CONTENT_COMMAND_FAIL:
+    case CLEAR_QUEUE_COMMAND_FAIL:
+    case SET_POSITION_COMMAND_FAIL:
+    case PAUSE_COMMAND_FAIL:
+    case RESUME_COMMAND_FAIL:
+      return serversAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.serverId],
+          commandLoading: false,
+          commandLoaded: false,
+        },
+        state
+      );
+    case SET_SERVER_STATUS:
+      return serversAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.id],
+          server: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].server),
+            id: action.payload.id,
+            status: action.payload.status,
+          },
+        },
+        state
+      );
     default:
       return state;
   }
