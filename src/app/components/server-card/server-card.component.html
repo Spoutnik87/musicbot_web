@@ -1,4 +1,7 @@
 <div class="w-100 server-card-container">
   <div class="w-100 ml-3 pt-1">{{ server.name }}</div>
-  <div class="float-right"><button class="btn btn-primary mt-2 mr-3" (click)="onSelect()">Voir</button></div>
+  <div class="float-right">
+    <button class="btn btn-primary mt-2 mr-3" (click)="onManage()">Administrer</button
+    ><button class="btn btn-primary mt-2 mr-3" (click)="onSelect()">Voir</button>
+  </div>
 </div>

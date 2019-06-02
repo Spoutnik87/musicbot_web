@@ -13,7 +13,14 @@ export class ServerCardComponent {
   @Output()
   select = new EventEmitter<string>();
 
+  @Output()
+  manage = new EventEmitter<string>();
+
   onSelect() {
     this.select.emit(this.server.id);
+  }
+
+  onManage() {
+    this.manage.emit(this.server.id);
   }
 }

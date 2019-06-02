@@ -72,7 +72,10 @@ export class ServersEffects {
     ofType(UPDATE_SERVER),
     switchMap((action: UpdateServer) =>
       this.serverService.update(action.payload.id, action.payload.name).pipe(
-        mergeMap(server => [new UpdateServerSuccess(server)]),
+        mergeMap(server => {
+          this.router.navigateByUrl(`/manage-server/${server.id}`);
+          return [new UpdateServerSuccess(server)];
+        }),
         catchError(error => of(new UpdateServerFail(action.payload.id, error)))
       )
     )

@@ -102,7 +102,10 @@ export class ContentsEffects {
       this.contentService
         .update(action.payload.id, action.payload.groupId, action.payload.name, action.payload.categoryId, action.payload.contentTypeId)
         .pipe(
-          mergeMap(content => [new UpdateContentSuccess(content)]),
+          mergeMap(content => {
+            this.router.navigateByUrl(`/manage-server/${content.serverId}`);
+            return [new UpdateContentSuccess(content)];
+          }),
           catchError(error => of(new UpdateContentFail(action.payload.id, error)))
         )
     )

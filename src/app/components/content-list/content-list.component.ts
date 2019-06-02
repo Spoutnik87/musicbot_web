@@ -1,16 +1,16 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ContentModel } from 'src/app/models/content.model';
 import { ServerStatusModel } from 'src/app/models/server-status.model';
 import { ServerModel } from 'src/app/models/server.model';
-import { IAppState } from 'src/app/store';
 
 @Component({
   selector: 'app-content-list',
   templateUrl: './content-list.component.html',
 })
 export class ContentListComponent {
+  faPlus = faPlus;
+
   @Input()
   server: ServerModel;
 

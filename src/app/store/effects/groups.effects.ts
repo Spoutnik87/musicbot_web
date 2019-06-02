@@ -72,7 +72,10 @@ export class GroupsEffects {
     ofType(UPDATE_GROUP),
     switchMap((action: UpdateGroup) =>
       this.groupService.update(action.payload.id, action.payload.serverId, action.payload.name).pipe(
-        mergeMap(group => [new UpdateGroupSuccess(group)]),
+        mergeMap(group => {
+          this.router.navigateByUrl(`/manage-server/${group.serverId}`);
+          return [new UpdateGroupSuccess(group)];
+        }),
         catchError(error => of(new UpdateGroupFail(action.payload.id, error)))
       )
     )

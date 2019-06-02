@@ -23,9 +23,8 @@ export class CategoryService {
     }) as Observable<CategoryModel>;
   }
 
-  update(id: string, serverId: string, name: string): Observable<CategoryModel> {
+  update(id: string, name: string): Observable<CategoryModel> {
     return this.httpClient.put(`${this.configService.getApiUrl()}/category/${id}`, {
-      serverId,
       name,
     }) as Observable<CategoryModel>;
   }
