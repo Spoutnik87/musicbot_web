@@ -12,6 +12,18 @@ export class RadioInputComponent {
   @Input()
   label = '';
 
+  radioValue = false;
+
   @Output()
-  change = new EventEmitter();
+  valueChange = new EventEmitter();
+
+  @Input()
+  set value(value) {
+    this.radioValue = value;
+    this.valueChange.emit(this.radioValue);
+  }
+
+  get value() {
+    return this.radioValue;
+  }
 }

@@ -10,7 +10,9 @@ import { getContentState, FetchContent, FetchContentThumbnail, IAppState, Update
 export class EditContentComponent {
   contentId = this.route.snapshot.paramMap.get('id');
 
-  contentState = this.store.select(getContentState, { id: this.contentId });
+  contentState$ = this.store.select(getContentState, { id: this.contentId });
+
+  loading = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<IAppState>) {
     this.store.dispatch(new FetchContent(this.contentId));

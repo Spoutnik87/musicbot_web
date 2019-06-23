@@ -1,0 +1,14 @@
+.card-body {
+  min-height: 20rem;
+}
+
+.ghost {
+  color: #18a388;
+  opacity: 0.2;
+  margin-top: 5rem;
+}
+
+.ghost-text {
+  color: #18a388;
+  opacity: 0.5;
+}
