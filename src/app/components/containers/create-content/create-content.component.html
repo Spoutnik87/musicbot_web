@@ -5,6 +5,7 @@
     [groups]="groups$ | async"
     [serverId]="serverId"
     (submit)="onSubmit($event)"
+    (cancel)="onCancel()"
     [loading]="loading"
     *ngIf="!fetching && (loaded$ | async)"
   ></app-content-form>

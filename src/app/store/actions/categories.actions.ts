@@ -147,14 +147,12 @@ export class UpdateCategory implements Action {
   readonly type = UPDATE_CATEGORY;
   payload: {
     id: string;
-    serverId: string;
     name: string;
   };
 
-  constructor(id: string, serverId: string, name: string) {
+  constructor(id: string, name: string) {
     this.payload = {
       id,
-      serverId,
       name,
     };
   }

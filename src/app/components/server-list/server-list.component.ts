@@ -18,7 +18,11 @@ export class ServerListComponent {
     this.store.dispatch(new FetchServers());
   }
 
-  onSelect(id: number) {
+  onSelect(id: string) {
     this.router.navigateByUrl(`/server/${id}`);
+  }
+
+  onManage(id: string) {
+    this.router.navigateByUrl(`/manage-server/${id}`);
   }
 }

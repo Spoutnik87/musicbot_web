@@ -9,7 +9,12 @@
     <app-loading [loading]="serversLoading$ | async"></app-loading>
     <ng-container *appLet="servers$ | async as servers">
       <div class="text-center" *ngIf="servers.length === 0">Vous n'avez aucun serveur actuellement.</div>
-      <app-server-card *ngFor="let server of servers" [server]="server" (select)="onSelect($event)"></app-server-card>
+      <app-server-card
+        *ngFor="let server of servers"
+        [server]="server"
+        (select)="onSelect($event)"
+        (manage)="onManage($event)"
+      ></app-server-card>
     </ng-container>
   </div>
 </div>

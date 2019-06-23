@@ -1,8 +1,8 @@
 <div class="container mt-5">
-  <app-category-form
-    [category]="(categoryState | async).category"
+  <app-content-form
+    [content]="(contentState$ | async).content"
     (submit)="onSubmit($event)"
     (cancel)="onCancel($event)"
     [loading]="loading"
-  ></app-category-form>
+  ></app-content-form>
 </div>

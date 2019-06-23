@@ -1,0 +1,88 @@
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 70px;
+  height: 26px;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e1e1e1;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 15px;
+  width: 15px;
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  border-radius: 50%;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.state1-container {
+  left: 0px;
+  position: absolute;
+  width: 23px;
+  height: 26px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.state2-container {
+  left: 23px;
+  position: absolute;
+  width: 23px;
+  height: 26px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.state3-container {
+  left: 46px;
+  position: absolute;
+  width: 23px;
+  height: 26px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.state1.slider::before {
+  background-color: #c45e69;
+}
+
+.state2.slider::before {
+  -webkit-transform: translateX(22px);
+  -ms-transform: translateX(22px);
+  transform: translateX(22px);
+  background-color: #747d8c;
+}
+
+.state3.slider::before {
+  -webkit-transform: translateX(44px);
+  -ms-transform: translateX(44px);
+  transform: translateX(44px);
+  background-color: #69b26c;
+}
+
+.state1.slider {
+  border: 2px solid #c45e69;
+}
+
+.state2.slider {
+  border: 2px solid #747d8c;
+}
+
+.state3.slider {
+  border: 2px solid #69b26c;
+}

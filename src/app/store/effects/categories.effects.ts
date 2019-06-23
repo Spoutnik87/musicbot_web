@@ -71,8 +71,11 @@ export class CategoriesEffects {
   updateCategory$ = this.action$.pipe(
     ofType(UPDATE_CATEGORY),
     switchMap((action: UpdateCategory) =>
-      this.categoryService.update(action.payload.id, action.payload.serverId, action.payload.name).pipe(
-        mergeMap(category => [new UpdateCategorySuccess(category)]),
+      this.categoryService.update(action.payload.id, action.payload.name).pipe(
+        mergeMap(category => {
+          this.router.navigateByUrl(`/manage-server/${category.serverId}`);
+          return [new UpdateCategorySuccess(category)];
+        }),
         catchError(error => of(new UpdateCategoryFail(action.payload.id, error)))
       )
     )

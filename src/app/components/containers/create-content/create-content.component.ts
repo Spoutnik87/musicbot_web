@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { combineLatest, iif, of } from 'rxjs';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
 import { Permission } from 'src/app/enums/Permission';
 import { ContentService } from 'src/app/services';
 import {
@@ -55,7 +55,19 @@ export class CreateContentComponent {
     this.store.dispatch(new FetchServerCategories(this.serverId));
   }
 
-  onSubmit(event: { name: string; description: string; thumbnail: any; media: any; categoryId: string; groupId: string }) {
+  onSubmit(event: {
+    name: string;
+    description: string;
+    thumbnail: any;
+    media: any;
+    categoryId: string;
+    visibleGroupList: {
+      id: string;
+      visible: boolean;
+    }[];
+    contentType: string;
+    link: string;
+  }) {
     const createThumbnail = (contentId: string, thumbnail: any) => {
       return this.contentService.updateThumbnail(contentId, thumbnail);
     };
@@ -65,54 +77,61 @@ export class CreateContentComponent {
     /**
      * Thumbnail is optionnal. Don't send it if thumbnail is null.
      */
-    if (!this.contentCreated) {
-      this.contentService
-        .create(event.groupId, event.name, event.description, event.categoryId, '')
-        .pipe(
-          switchMap(content => {
-            this.contentId = content.id;
-            this.contentCreated = true;
-            if (event.thumbnail == null) {
-              return of(content);
-            } else {
-              return createThumbnail(content.id, event.thumbnail);
-            }
-          }),
-          switchMap(content => {
-            this.contentThumbnailCreated = true;
-            return createMedia(content.id, event.media);
-          }),
-          map(content => {
-            this.contentMediaCreated = true;
-            return content;
-          })
+    of(event)
+      .pipe(
+        // Step 1 - Creating the content
+        switchMap(() =>
+          iif(
+            () => !this.contentCreated,
+            this.contentService
+              .create(
+                event.visibleGroupList,
+                event.name,
+                event.description,
+                event.categoryId,
+                event.contentType,
+                event.link != null && event.link !== '' ? event.link : undefined
+              )
+              .pipe(
+                map(content => {
+                  this.contentId = content.id;
+                  this.contentCreated = true;
+                })
+              ),
+            of(event)
+          )
+        ),
+        // Step 2 - Uploading the thumbnail if needed
+        switchMap(() =>
+          iif(
+            () => event.thumbnail != null && !this.contentThumbnailCreated,
+            this.contentService.updateThumbnail(this.contentId, event.thumbnail).pipe(
+              map(() => {
+                this.contentThumbnailCreated = true;
+              })
+            ),
+            of(event)
+          )
+        ),
+        // Step 3 - If it's a LOCAL content, uploading the media.
+        switchMap(() =>
+          iif(
+            () => event.contentType === 'LOCAL' && !this.contentMediaCreated,
+            this.contentService.updateMedia(this.contentId, event.media).pipe(
+              map(() => {
+                this.contentMediaCreated = true;
+              })
+            ),
+            of(event)
+          )
         )
-        .subscribe(
-          () => {
-            this.onFinish();
-          },
-          () => {}
-        );
-    } else {
-      if (!this.contentThumbnailCreated) {
-        this.contentService.updateThumbnail(this.contentId, event.thumbnail).subscribe(
-          () => {
-            this.contentThumbnailCreated = true;
-            this.onFinish();
-          },
-          () => {}
-        );
-      }
-      if (!this.contentMediaCreated) {
-        this.contentService.updateMedia(this.contentId, event.media).subscribe(
-          () => {
-            this.contentMediaCreated = true;
-            this.onFinish();
-          },
-          () => {}
-        );
-      }
-    }
+      )
+      .subscribe(
+        () => {
+          this.onFinish();
+        },
+        () => {}
+      );
   }
 
   onCancel() {
@@ -120,8 +139,6 @@ export class CreateContentComponent {
   }
 
   onFinish() {
-    if (this.contentCreated && this.contentThumbnailCreated && this.contentMediaCreated) {
-      this.router.navigateByUrl(`/server/${this.serverId}`);
-    }
+    this.router.navigateByUrl(`/server/${this.serverId}`);
   }
 }

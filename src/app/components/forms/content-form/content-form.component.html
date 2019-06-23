@@ -1,22 +1,47 @@
 <app-card title="Nouveau contenu" *ngIf="step === 1">
+  Choisissez le type de contenu que vous souhaitez créer :
+  <div class="form-check">
+    <input
+      type="radio"
+      class="form-check-input"
+      name="contentType"
+      id="youtubeContentType"
+      [(ngModel)]="contentInput.contentType"
+      value="YOUTUBE"
+    />
+    <label class="form-check-label" for="youtubeContentType">
+      YouTube
+    </label>
+  </div>
+  <div class="form-check">
+    <input
+      type="radio"
+      class="form-check-input"
+      name="contentType"
+      id="localContentType"
+      [(ngModel)]="contentInput.contentType"
+      value="LOCAL"
+    />
+    <label class="form-check-label" for="localContentType">
+      Personnalisé
+    </label>
+  </div>
+  <button class="btn btn-success mt-2" (click)="onSubmit()" [disabled]="contentInput.contentType == null">Suivant</button>
+  <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour</button>
+</app-card>
+<app-card [title]="content != null ? 'Modifier un contenu' : 'Nouveau contenu'" *ngIf="step === 2">
   <div class="form-group">
     <label for="name">Nom</label>
-    <input type="text" class="form-control" name="name" id="name" [(ngModel)]="content.name" placeholder="Nom" />
+    <input type="text" class="form-control" name="name" id="name" [(ngModel)]="contentInput.name" placeholder="Nom" />
   </div>
   <div class="form-group">
-    <label for="description">Description</label>
-    <textarea class="form-control rounded-0" id="description" rows="3" [(ngModel)]="content.description"></textarea>
-  </div>
-  <div class="form-group">
-    <label for="group">Groupe</label>
-    <select class="form-control" id="group" [(ngModel)]="content.groupId">
-      <option *ngFor="let group of groups" [ngValue]="group.id">{{ group.name }}</option>
-    </select>
+    <label for="description">Description (optionnel)</label>
+    <textarea class="form-control rounded-0" id="description" rows="3" [(ngModel)]="contentInput.description"></textarea>
   </div>
   <div class="form-group">
     <label for="categpry">Catégorie</label>
     <ng-container *ngIf="categories.length > 0">
-      <select class="form-control" id="category" [(ngModel)]="content.categoryId">
+      <select class="form-control" id="category" [(ngModel)]="contentInput.categoryId">
         <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
       </select>
     </ng-container>
@@ -25,34 +50,68 @@
       <a class="btn btn-primary" [routerLink]="'/create-category/' + serverId">Ajouter une catégorie</a>
     </ng-container>
   </div>
-  <button class="btn btn-success mt-2" (click)="onSubmit()">Suivant</button>
+  <button
+    class="btn btn-success mt-2"
+    (click)="onSubmit()"
+    [disabled]="contentInput.name.length == 0 || contentInput.categoryId == '' || contentInput.groupId == ''"
+  >
+    Suivant
+  </button>
   <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour</button>
 </app-card>
-<app-card title="Choisir une icone (optionnel)" *ngIf="step === 2">
+<app-card title="Choisir une icone (optionnel)" *ngIf="step === 3">
   <div class="form-group">
-    <div *ngIf="content.thumbnail">
-      <img [src]="content.thumbnail" width="200" height="200" />
+    <div *ngIf="contentInput.thumbnail">
+      <img [src]="contentInput.thumbnail" width="200" height="200" />
     </div>
     <input type="file" style="display: none" accept="image/png,image/jpeg" (change)="onFileChange($event)" #thumbnailInput />
-    <button class="btn btn-primary mt-2" (click)="thumbnailInput.click()" *ngIf="content.thumbnail == null">Choisir une icone</button>
-    <button class="btn btn-danger mt-2 ml-1" (click)="onRemoveThumbnail()" *ngIf="content.thumbnail != null">Supprimer</button>
+    <button class="btn btn-primary mt-2" (click)="thumbnailInput.click()" *ngIf="contentInput.thumbnail == null">Choisir une icone</button>
+    <button class="btn btn-danger mt-2 ml-1" (click)="onRemoveThumbnail()" *ngIf="contentInput.thumbnail != null">Supprimer</button>
   </div>
   <button class="btn btn-success mt-2" (click)="onSubmit()">Suivant</button>
   <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour</button>
 </app-card>
-<app-card title="Choisir un media" *ngIf="step === 3">
+<app-card title="Choisir un media" *ngIf="step === 4 && contentInput.contentType === 'LOCAL'">
   <div class="form-group">
-    <div *ngIf="content.media">
+    <div *ngIf="contentInput.media">
       <audio controls>
-        <source [src]="content.media" type="audio/mpeg" />
+        <source [src]="contentInput.media" type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
     </div>
     <input type="file" style="display: none" accept="audio/mpeg" (change)="onFileChange($event)" #mediaInput />
-    <button class="btn btn-primary mt-2" (click)="mediaInput.click()" *ngIf="content.media == null">Choisir un media</button>
-    <button class="btn btn-danger mt-2 ml-1" (click)="onRemoveMedia()" *ngIf="content.media != null">Supprimer</button>
+    <button class="btn btn-primary mt-2" (click)="mediaInput.click()" *ngIf="contentInput.media == null">Choisir un media</button>
+    <button class="btn btn-danger mt-2 ml-1" (click)="onRemoveMedia()" *ngIf="contentInput.media != null">Supprimer</button>
   </div>
   <app-loading [loading]="loading"></app-loading>
-  <button class="btn btn-success mt-2" *ngIf="!loading" (click)="onSubmit()" [disabled]="content.media == null">Créer</button>
+  <button class="btn btn-success mt-2" *ngIf="!loading" (click)="onSubmit()" [disabled]="contentInput.media == null">Suivant</button>
+  <button class="btn btn-primary mt-2 ml-2" *ngIf="!loading" (click)="onCancel()">Retour</button>
+</app-card>
+<app-card title="Choisir un media" *ngIf="step === 4 && contentInput.contentType === 'YOUTUBE'">
+  <div class="form-group">
+    <label for="link">Lien de la video :</label>
+    <input type="text" class="form-control" name="link" id="link" [(ngModel)]="contentInput.link" placeholder="Lien" />
+  </div>
+  <app-loading [loading]="loading"></app-loading>
+  <button
+    class="btn btn-success mt-2"
+    *ngIf="!loading"
+    (click)="onSubmit()"
+    [disabled]="contentInput.link == null || contentInput.link == ''"
+  >
+    Suivant
+  </button>
+  <button class="btn btn-primary mt-2 ml-2" *ngIf="!loading" (click)="onCancel()">Retour</button>
+</app-card>
+<app-card title="Visibilité" *ngIf="step === 5">
+  <div class="form-group">
+    <label for="groups">Contenu visible pour les groupes :</label>
+    <div id="groups" *ngFor="let group of groups">
+      <input [id]="'label' + group.id" type="checkbox" [(ngModel)]="contentInput.visibleGroupList[group.id]" />
+      <label [for]="'label' + group.id" class="ml-2">{{ group.name }}</label>
+    </div>
+  </div>
+  <app-loading [loading]="loading"></app-loading>
+  <button class="btn btn-success mt-2" *ngIf="!loading" (click)="onSubmit()">Créer</button>
   <button class="btn btn-primary mt-2 ml-2" *ngIf="!loading" (click)="onCancel()">Retour</button>
 </app-card>

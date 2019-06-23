@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CategoryModel } from 'src/app/models/category.model';
+import { ContentModel } from 'src/app/models/content.model';
 import { GroupModel } from 'src/app/models/group.model';
 
 @Component({
@@ -20,6 +21,9 @@ export class ContentFormComponent {
   @Input()
   categories: CategoryModel[];
 
+  @Input()
+  content: ContentModel = null;
+
   step = 1;
 
   @Output()
@@ -27,7 +31,12 @@ export class ContentFormComponent {
     name: string;
     description: string;
     categoryId: string;
-    groupId: string;
+    visibleGroupList: {
+      id: string;
+      visible: boolean;
+    }[];
+    contentType: string;
+    link: string;
     thumbnail: any;
     media: any;
   }>();
@@ -35,11 +44,15 @@ export class ContentFormComponent {
   @Output()
   cancel = new EventEmitter();
 
-  content: {
+  contentInput: {
     name: string;
     description: string;
     categoryId: string;
-    groupId: string;
+    contentType?: string;
+    link?: string;
+    visibleGroupList: {
+      [id: string]: boolean;
+    };
     thumbnail?: any;
     media?: any;
     thumbnailFile?: any;
@@ -47,9 +60,9 @@ export class ContentFormComponent {
   };
 
   constructor(private sanitizer: DomSanitizer) {
-    this.content = {
+    this.contentInput = {
       categoryId: '',
-      groupId: '',
+      visibleGroupList: {},
       name: '',
       description: '',
     };
@@ -64,39 +77,44 @@ export class ContentFormComponent {
   }
 
   onSubmit() {
-    if (this.step < 3) {
+    if (this.step < 5) {
       this.step++;
     } else {
       this.submit.emit({
-        name: this.content.name,
-        description: this.content.description,
-        categoryId: this.content.categoryId,
-        groupId: this.content.groupId,
-        thumbnail: this.content.thumbnailFile,
-        media: this.content.mediaFile,
+        name: this.contentInput.name,
+        description: this.contentInput.description,
+        categoryId: this.contentInput.categoryId,
+        contentType: this.contentInput.contentType,
+        link: this.contentInput.link,
+        visibleGroupList: Object.keys(this.contentInput.visibleGroupList).map(key => ({
+          id: key,
+          visible: this.contentInput.visibleGroupList[key],
+        })),
+        thumbnail: this.contentInput.thumbnailFile,
+        media: this.contentInput.mediaFile,
       });
     }
   }
 
   onFileChange(event) {
     // Thumbnail upload
-    if (this.step === 2) {
+    if (this.step === 3) {
       const file = event.target.files[0];
-      this.content.thumbnailFile = file;
+      this.contentInput.thumbnailFile = file;
       const reader = new FileReader();
       reader.addEventListener('loadend', () => {
-        this.content.thumbnail = reader.result;
+        this.contentInput.thumbnail = reader.result;
       });
       if (file) {
         reader.readAsDataURL(file);
       }
       // Media upload
-    } else if (this.step === 3) {
+    } else if (this.step === 4) {
       const file = event.target.files[0];
-      this.content.mediaFile = file;
+      this.contentInput.mediaFile = file;
       const reader = new FileReader();
       reader.addEventListener('loadend', () => {
-        this.content.media = this.sanitizer.bypassSecurityTrustResourceUrl(reader.result as string);
+        this.contentInput.media = this.sanitizer.bypassSecurityTrustResourceUrl(reader.result as string);
       });
       if (file) {
         reader.readAsDataURL(file);
@@ -105,12 +123,12 @@ export class ContentFormComponent {
   }
 
   onRemoveThumbnail() {
-    this.content.thumbnail = null;
-    this.content.thumbnailFile = null;
+    this.contentInput.thumbnail = null;
+    this.contentInput.thumbnailFile = null;
   }
 
   onRemoveMedia() {
-    this.content.media = null;
-    this.content.mediaFile = null;
+    this.contentInput.media = null;
+    this.contentInput.mediaFile = null;
   }
 }
