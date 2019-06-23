@@ -12,6 +12,17 @@ export class CheckboxInputComponent {
   @Input()
   label = '';
 
+  @Input()
+  value = false;
+
   @Output()
-  change = new EventEmitter();
+  valueChange = new EventEmitter();
+
+  get checkboxValue() {
+    return this.value;
+  }
+
+  set checkboxValue(value) {
+    this.valueChange.emit(value);
+  }
 }

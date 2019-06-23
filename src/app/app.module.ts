@@ -28,6 +28,7 @@ import { RegisterComponent } from './components/containers/register/register.com
 import { ServerComponent } from './components/containers/server/server.component';
 import { SigninComponent } from './components/containers/signin/signin.component';
 import { ContentListComponent } from './components/content-list/content-list.component';
+import { FooterComponent } from './components/footer/footer.component';
 import { CategoryFormComponent } from './components/forms/category-form/category-form.component';
 import { ContentFormComponent } from './components/forms/content-form/content-form.component';
 import { GroupFormComponent } from './components/forms/group-form/group-form.component';
@@ -97,6 +98,7 @@ export function tokenGetter() {
     RadioInputComponent,
     ToggleMultiStateInputComponent,
     ListInputComponent,
+    FooterComponent,
     DurationPipe,
     LetDirective,
   ],

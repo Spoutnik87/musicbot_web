@@ -7,23 +7,25 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class RadioInputComponent {
   @Input()
-  name = '';
+  name: string;
+
+  @Input()
+  item: string;
 
   @Input()
   label = '';
 
-  radioValue = false;
+  @Input()
+  value: string;
 
   @Output()
   valueChange = new EventEmitter();
 
-  @Input()
-  set value(value) {
-    this.radioValue = value;
-    this.valueChange.emit(this.radioValue);
+  get radioValue() {
+    return this.value;
   }
 
-  get value() {
-    return this.radioValue;
+  set radioValue(value) {
+    this.valueChange.emit(value);
   }
 }

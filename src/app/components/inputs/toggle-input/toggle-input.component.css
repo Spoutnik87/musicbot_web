@@ -1,8 +1,13 @@
 .switch {
   position: relative;
-  display: inline-block;
+  display: block;
   width: 70px;
   height: 26px;
+}
+
+.label {
+  margin-left: 85px;
+  display: inline-block;
 }
 
 .switch input {

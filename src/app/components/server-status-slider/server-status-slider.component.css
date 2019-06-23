@@ -1,13 +1,18 @@
 ::ng-deep .time-slider .ng5-slider .ng5-slider-pointer {
-  width: 8px;
-  height: 16px;
-  top: auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 16px;
   bottom: 0;
-  background-color: #3b4074;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
+  top: -10px;
+  background-color: #2f83bc;
+  border: 3px outset #18a388;
 }
 
 ::ng-deep .time-slider .ng5-slider .ng5-slider-pointer:after {
   display: none;
+}
+
+::ng-deep .time-slider .ng5-slider .ng5-slider-selection {
+  background: #18a388;
+  opacity: 0.7;
 }

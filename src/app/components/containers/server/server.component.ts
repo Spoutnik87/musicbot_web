@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { faCopy, faSync } from '@fortawesome/free-solid-svg-icons';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { delay, map, switchMap } from 'rxjs/operators';
@@ -7,6 +8,7 @@ import { ServerStatusHelper } from 'src/app/helpers/server-status.helper';
 import { ServerStatusModel } from 'src/app/models/server-status.model';
 import { ConfigService, ServerService } from 'src/app/services';
 import { getServerContents, getServerState, FetchServer, FetchServerContents, IAppState, PlayContentCommand } from 'src/app/store';
+import { copyToClipboard } from 'src/app/utils';
 
 @Component({
   selector: 'app-server',
@@ -14,6 +16,10 @@ import { getServerContents, getServerState, FetchServer, FetchServerContents, IA
   styleUrls: ['./server.component.css'],
 })
 export class ServerComponent {
+  faSync = faSync;
+  faCopy = faCopy;
+  copyToClipboard = copyToClipboard;
+
   serverId = this.route.snapshot.paramMap.get('id');
   serverState$ = this.store.select(getServerState, { id: this.serverId });
 
