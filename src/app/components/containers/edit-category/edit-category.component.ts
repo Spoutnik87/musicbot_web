@@ -12,6 +12,8 @@ export class EditCategoryComponent {
 
   categoryState = this.store.select(getCategoryState, { id: this.categoryId });
 
+  loading = false;
+
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<IAppState>) {
     this.store.dispatch(new FetchCategory(this.categoryId));
   }

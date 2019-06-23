@@ -1,17 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 body {
-  background-color: #b0bfc4;
+  background-color: #18a388;
 }
 
 .card-header {
-  background-color: #424444;
+  background-color: #364d63;
   color: #ffffff;
   border-top-left-radius: 0.5em;
   border-top-right-radius: 0.5em;
 }
 
 .card-body {
-  background-color: #c6c6c6;
+  background-color: #dee6e8;
 }
 
 .card {
@@ -19,4 +19,49 @@ body {
   border: none;
   box-shadow: 5px 5px 10px 0px #656565;
   font-family: 'Verdana', 'Arial';
+}
+
+.btn-success {
+  background-color: #31c670;
+  border-color: #31c670;
+}
+
+.btn-success:hover {
+  background-color: #249353;
+  border-color: #249353;
+}
+
+.btn-success:not(:disabled):not(.disabled):active {
+  background-color: #249353;
+  border-color: #249353;
+}
+
+.btn-primary {
+  background-color: #216c9e;
+  border-color: #216c9e;
+}
+
+.btn-primary:hover {
+  background-color: #174f75;
+  border-color: #174f75;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: #174f75;
+  border-color: #174f75;
+}
+
+.btn-danger {
+  background-color: #d13d2e;
+  border-color: #d13d2e;
+}
+
+.btn-danger:hover {
+  background-color: #a32f23;
+  border-color: #a32f23;
+}
+
+.btn-danger:not(:disabled):not(.disabled):active {
+  background-color: #a32f23;
+  border-color: #a32f23;
 }

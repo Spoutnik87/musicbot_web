@@ -8,7 +8,14 @@
   <div class="card-body">
     <app-loading [loading]="serversLoading$ | async"></app-loading>
     <ng-container *appLet="servers$ | async as servers">
-      <div class="text-center" *ngIf="servers.length === 0">Vous n'avez aucun serveur actuellement.</div>
+      <div class="text-center" *ngIf="servers.length === 0">
+        <div class="mt-2 ghost-text">
+          Vous n'avez aucun serveur actuellement
+        </div>
+        <div class="ghost">
+          <fa-icon [icon]="faGhost" size="5x"></fa-icon>
+        </div>
+      </div>
       <app-server-card
         *ngFor="let server of servers"
         [server]="server"
