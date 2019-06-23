@@ -1,6 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+  height: 100%;
+}
+
 body {
   background-color: #18a388;
+  /* background: linear-gradient(10deg, #d1590a 26%, #18a388 15%); 
+  margin-bottom: 10rem;
+  background-repeat: no-repeat; */
 }
 
 .card-header {
@@ -64,4 +70,9 @@ body {
 .btn-danger:not(:disabled):not(.disabled):active {
   background-color: #a32f23;
   border-color: #a32f23;
+}
+
+.form-control:focus {
+  border-color: #18a388;
+  box-shadow: 0 0 0 0.2rem rgba(24, 163, 136, 0.25);
 }

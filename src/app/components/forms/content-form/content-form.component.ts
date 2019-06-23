@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { faArrowCircleLeft, faArrowCircleRight, faSave, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { CategoryModel } from 'src/app/models/category.model';
 import { ContentModel } from 'src/app/models/content.model';
 import { GroupModel } from 'src/app/models/group.model';
@@ -9,6 +10,12 @@ import { GroupModel } from 'src/app/models/group.model';
   templateUrl: './content-form.component.html',
 })
 export class ContentFormComponent {
+  faArrowCircleLeft = faArrowCircleLeft;
+  faArrowCircleRight = faArrowCircleRight;
+  faSave = faSave;
+  faTrash = faTrash;
+  faUpload = faUpload;
+
   @Input()
   loading: boolean;
 
@@ -48,7 +55,7 @@ export class ContentFormComponent {
     name: string;
     description: string;
     categoryId: string;
-    contentType?: string;
+    contentType: string;
     link?: string;
     visibleGroupList: {
       [id: string]: boolean;
@@ -65,6 +72,7 @@ export class ContentFormComponent {
       visibleGroupList: {},
       name: '',
       description: '',
+      contentType: 'YOUTUBE',
     };
   }
 

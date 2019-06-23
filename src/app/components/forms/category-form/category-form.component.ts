@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { faArrowAltCircleRight, faArrowCircleLeft, faSave } from '@fortawesome/free-solid-svg-icons';
 import { CategoryModel } from 'src/app/models/category.model';
 
 @Component({
@@ -6,6 +7,10 @@ import { CategoryModel } from 'src/app/models/category.model';
   templateUrl: './category-form.component.html',
 })
 export class CategoryFormComponent implements OnInit {
+  faArrowCircleLeft = faArrowCircleLeft;
+  faArrowCircleRight = faArrowAltCircleRight;
+  faSave = faSave;
+
   @Input()
   loading = false;
 

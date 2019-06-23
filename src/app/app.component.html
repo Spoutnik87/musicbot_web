@@ -2,6 +2,7 @@
   <ng-container *ngIf="!authenticatedUser.isAuthenticated || !authenticatedUser.loading">
     <app-header></app-header>
     <router-outlet></router-outlet>
+    <app-footer></app-footer>
   </ng-container>
   <div class="container mt-5 text-center" *ngIf="authenticatedUser.isAuthenticated && authenticatedUser.loading">
     <app-loading size="6x"></app-loading>

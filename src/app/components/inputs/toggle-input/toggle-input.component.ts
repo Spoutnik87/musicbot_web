@@ -12,6 +12,17 @@ export class ToggleInputComponent {
   @Input()
   label = '';
 
+  @Input()
+  value = false;
+
   @Output()
-  change = new EventEmitter();
+  valueChange = new EventEmitter();
+
+  get toggleValue() {
+    return this.value;
+  }
+
+  set toggleValue(value) {
+    this.valueChange.emit(value);
+  }
 }

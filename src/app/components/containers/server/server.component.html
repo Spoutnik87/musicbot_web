@@ -5,10 +5,18 @@
     <app-card [title]="'Serveur: ' + serverState.server.name">
       <div class="w-100" *ngIf="!serverState.server.linked">
         Ce serveur n'est pas lié à une instance Discord. <br />Entrez la commande suivante dans un salon de votre serveur Discord :
-        <div class="mt-2 w-100 token-container">
-          {{ configService.getCommandPrefix() }}link {{ (serverLinkToken$ | async)?.serverLinkToken }}
+        <div class="row mt-2" *appLet="serverLinkToken$ | async as serverLinkToken">
+          <div class="col-md-10 token-container">{{ configService.getCommandPrefix() }}link {{ serverLinkToken?.serverLinkToken }}</div>
+          <div class="col-md-2">
+            <button
+              class="btn btn-primary"
+              (click)="copyToClipboard(configService.getCommandPrefix() + 'link ' + serverLinkToken?.serverLinkToken)"
+            >
+              <fa-icon [icon]="faCopy" class="mr-2"></fa-icon>Copier
+            </button>
+          </div>
         </div>
-        <button class="btn btn-primary mt-2" (click)="refresh()">Rafraîchir</button>
+        <button class="btn btn-primary mt-2" (click)="refresh()"><fa-icon [icon]="faSync" class="mr-2"></fa-icon>Rafraîchir</button>
       </div>
       <div class="w-100" *ngIf="serverState.server.linked">
         <app-content-list

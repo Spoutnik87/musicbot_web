@@ -6,11 +6,13 @@
     </div>
   </div>
   <div class="card-body">
-    <app-loading [loading]="serversLoading$ | async"></app-loading>
+    <div class="text-center ghost" *ngIf="serversLoading$ | async as loading">
+      <app-loading [loading]="loading"></app-loading>
+    </div>
     <ng-container *appLet="servers$ | async as servers">
       <div class="text-center" *ngIf="servers.length === 0">
         <div class="mt-2 ghost-text">
-          Vous n'avez aucun serveur actuellement
+          Aucun serveur actuellement
         </div>
         <div class="ghost">
           <fa-icon [icon]="faGhost" size="5x"></fa-icon>
