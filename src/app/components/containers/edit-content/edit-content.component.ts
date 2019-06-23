@@ -17,8 +17,19 @@ export class EditContentComponent {
     this.store.dispatch(new FetchContentThumbnail(this.contentId));
   }
 
-  onSubmit(event: { name: string; groupId: string; categoryId: string; contentTypeId: string }) {
-    this.store.dispatch(new UpdateContent(this.contentId, event.groupId, event.name, event.categoryId, ''));
+  onSubmit(event: {
+    name: string;
+    description: string;
+    categoryId: string;
+    contentType: string;
+    visibleGroupList: {
+      id: string;
+      visible: boolean;
+    }[];
+  }) {
+    this.store.dispatch(
+      new UpdateContent(this.contentId, event.visibleGroupList, event.name, event.description, event.categoryId, event.contentType)
+    );
   }
 
   onCancel(serverId: string) {

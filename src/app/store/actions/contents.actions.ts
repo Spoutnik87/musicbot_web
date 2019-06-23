@@ -110,34 +110,34 @@ export class CreateContent implements Action {
   readonly type = CREATE_CONTENT;
   payload: {
     serverId: string;
-    groupId: string;
+    visibleGroupList: {
+      id: string;
+      visible: boolean;
+    }[];
     name: string;
     description: string;
     categoryId: string;
     contentTypeId: string;
-    thumbnail: any;
-    media: any;
   };
 
   constructor(
     serverId: string,
-    groupId: string,
+    visibleGroupList: {
+      id: string;
+      visible: boolean;
+    }[],
     name: string,
     description: string,
     categoryId: string,
-    contentTypeId: string,
-    thumbnail: any,
-    media: any
+    contentTypeId: string
   ) {
     this.payload = {
       serverId,
-      groupId,
+      visibleGroupList,
       name,
       description,
       categoryId,
       contentTypeId,
-      thumbnail,
-      media,
     };
   }
 }
@@ -172,19 +172,34 @@ export class UpdateContent implements Action {
   readonly type = UPDATE_CONTENT;
   payload: {
     id: string;
-    groupId: string;
+    visibleGroupList: {
+      id: string;
+      visible: boolean;
+    }[];
     name: string;
+    description: string;
     categoryId: string;
-    contentTypeId: string;
+    contentType: string;
   };
 
-  constructor(id: string, groupId: string, name: string, categoryId: string, contentTypeId: string) {
+  constructor(
+    id: string,
+    visibleGroupList: {
+      id: string;
+      visible: boolean;
+    }[],
+    name: string,
+    description: string,
+    categoryId: string,
+    contentType: string
+  ) {
     this.payload = {
       id,
-      groupId,
+      visibleGroupList,
       name,
+      description,
       categoryId,
-      contentTypeId,
+      contentType,
     };
   }
 }

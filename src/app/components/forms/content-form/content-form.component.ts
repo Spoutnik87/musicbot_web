@@ -31,7 +31,12 @@ export class ContentFormComponent {
     name: string;
     description: string;
     categoryId: string;
-    groupId: string;
+    visibleGroupList: {
+      id: string;
+      visible: boolean;
+    }[];
+    contentType: string;
+    link: string;
     thumbnail: any;
     media: any;
   }>();
@@ -43,7 +48,11 @@ export class ContentFormComponent {
     name: string;
     description: string;
     categoryId: string;
-    groupId: string;
+    contentType?: string;
+    link?: string;
+    visibleGroupList: {
+      [id: string]: boolean;
+    };
     thumbnail?: any;
     media?: any;
     thumbnailFile?: any;
@@ -53,7 +62,7 @@ export class ContentFormComponent {
   constructor(private sanitizer: DomSanitizer) {
     this.contentInput = {
       categoryId: '',
-      groupId: '',
+      visibleGroupList: {},
       name: '',
       description: '',
     };
@@ -68,14 +77,19 @@ export class ContentFormComponent {
   }
 
   onSubmit() {
-    if (this.step < 3) {
+    if (this.step < 5) {
       this.step++;
     } else {
       this.submit.emit({
         name: this.contentInput.name,
         description: this.contentInput.description,
         categoryId: this.contentInput.categoryId,
-        groupId: this.contentInput.groupId,
+        contentType: this.contentInput.contentType,
+        link: this.contentInput.link,
+        visibleGroupList: Object.keys(this.contentInput.visibleGroupList).map(key => ({
+          id: key,
+          visible: this.contentInput.visibleGroupList[key],
+        })),
         thumbnail: this.contentInput.thumbnailFile,
         media: this.contentInput.mediaFile,
       });
@@ -84,7 +98,7 @@ export class ContentFormComponent {
 
   onFileChange(event) {
     // Thumbnail upload
-    if (this.step === 2) {
+    if (this.step === 3) {
       const file = event.target.files[0];
       this.contentInput.thumbnailFile = file;
       const reader = new FileReader();
@@ -95,7 +109,7 @@ export class ContentFormComponent {
         reader.readAsDataURL(file);
       }
       // Media upload
-    } else if (this.step === 3) {
+    } else if (this.step === 4) {
       const file = event.target.files[0];
       this.contentInput.mediaFile = file;
       const reader = new FileReader();

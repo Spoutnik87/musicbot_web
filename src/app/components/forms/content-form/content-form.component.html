@@ -1,4 +1,35 @@
-<app-card [title]="contentInput != null ? 'Modifier un contenu' : 'Nouveau contenu'" *ngIf="step === 1">
+<app-card title="Nouveau contenu" *ngIf="step === 1">
+  Choisissez le type de contenu que vous souhaitez créer :
+  <div class="form-check">
+    <input
+      type="radio"
+      class="form-check-input"
+      name="contentType"
+      id="youtubeContentType"
+      [(ngModel)]="contentInput.contentType"
+      value="YOUTUBE"
+    />
+    <label class="form-check-label" for="youtubeContentType">
+      YouTube
+    </label>
+  </div>
+  <div class="form-check">
+    <input
+      type="radio"
+      class="form-check-input"
+      name="contentType"
+      id="localContentType"
+      [(ngModel)]="contentInput.contentType"
+      value="LOCAL"
+    />
+    <label class="form-check-label" for="localContentType">
+      Personnalisé
+    </label>
+  </div>
+  <button class="btn btn-success mt-2" (click)="onSubmit()" [disabled]="contentInput.contentType == null">Suivant</button>
+  <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour</button>
+</app-card>
+<app-card [title]="content != null ? 'Modifier un contenu' : 'Nouveau contenu'" *ngIf="step === 2">
   <div class="form-group">
     <label for="name">Nom</label>
     <input type="text" class="form-control" name="name" id="name" [(ngModel)]="contentInput.name" placeholder="Nom" />
@@ -6,12 +37,6 @@
   <div class="form-group">
     <label for="description">Description (optionnel)</label>
     <textarea class="form-control rounded-0" id="description" rows="3" [(ngModel)]="contentInput.description"></textarea>
-  </div>
-  <div class="form-group">
-    <label for="group">Groupe</label>
-    <select class="form-control" id="group" [(ngModel)]="contentInput.groupId">
-      <option *ngFor="let group of groups" [ngValue]="group.id">{{ group.name }}</option>
-    </select>
   </div>
   <div class="form-group">
     <label for="categpry">Catégorie</label>
@@ -34,7 +59,7 @@
   </button>
   <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour</button>
 </app-card>
-<app-card title="Choisir une icone (optionnel)" *ngIf="step === 2">
+<app-card title="Choisir une icone (optionnel)" *ngIf="step === 3">
   <div class="form-group">
     <div *ngIf="contentInput.thumbnail">
       <img [src]="contentInput.thumbnail" width="200" height="200" />
@@ -46,7 +71,7 @@
   <button class="btn btn-success mt-2" (click)="onSubmit()">Suivant</button>
   <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour</button>
 </app-card>
-<app-card title="Choisir un media" *ngIf="step === 3">
+<app-card title="Choisir un media" *ngIf="step === 4 && contentInput.contentType === 'LOCAL'">
   <div class="form-group">
     <div *ngIf="contentInput.media">
       <audio controls>
@@ -59,6 +84,34 @@
     <button class="btn btn-danger mt-2 ml-1" (click)="onRemoveMedia()" *ngIf="contentInput.media != null">Supprimer</button>
   </div>
   <app-loading [loading]="loading"></app-loading>
-  <button class="btn btn-success mt-2" *ngIf="!loading" (click)="onSubmit()" [disabled]="contentInput.media == null">Créer</button>
+  <button class="btn btn-success mt-2" *ngIf="!loading" (click)="onSubmit()" [disabled]="contentInput.media == null">Suivant</button>
+  <button class="btn btn-primary mt-2 ml-2" *ngIf="!loading" (click)="onCancel()">Retour</button>
+</app-card>
+<app-card title="Choisir un media" *ngIf="step === 4 && contentInput.contentType === 'YOUTUBE'">
+  <div class="form-group">
+    <label for="link">Lien de la video :</label>
+    <input type="text" class="form-control" name="link" id="link" [(ngModel)]="contentInput.link" placeholder="Lien" />
+  </div>
+  <app-loading [loading]="loading"></app-loading>
+  <button
+    class="btn btn-success mt-2"
+    *ngIf="!loading"
+    (click)="onSubmit()"
+    [disabled]="contentInput.link == null || contentInput.link == ''"
+  >
+    Suivant
+  </button>
+  <button class="btn btn-primary mt-2 ml-2" *ngIf="!loading" (click)="onCancel()">Retour</button>
+</app-card>
+<app-card title="Visibilité" *ngIf="step === 5">
+  <div class="form-group">
+    <label for="groups">Contenu visible pour les groupes :</label>
+    <div id="groups" *ngFor="let group of groups">
+      <input [id]="'label' + group.id" type="checkbox" [(ngModel)]="contentInput.visibleGroupList[group.id]" />
+      <label [for]="'label' + group.id" class="ml-2">{{ group.name }}</label>
+    </div>
+  </div>
+  <app-loading [loading]="loading"></app-loading>
+  <button class="btn btn-success mt-2" *ngIf="!loading" (click)="onSubmit()">Créer</button>
   <button class="btn btn-primary mt-2 ml-2" *ngIf="!loading" (click)="onCancel()">Retour</button>
 </app-card>

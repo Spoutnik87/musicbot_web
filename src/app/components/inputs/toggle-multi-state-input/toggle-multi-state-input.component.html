@@ -1,0 +1,6 @@
+<label class="switch">
+  <div class="state1-container" (click)="onChange($event)"></div>
+  <div class="state2-container" (click)="onChange($event)"></div>
+  <div class="state3-container" (click)="onChange($event)"></div>
+  <span class="slider" [ngClass]="{ state1: value === -1, state2: value === 0, state3: value === 1 }"></span>
+</label>

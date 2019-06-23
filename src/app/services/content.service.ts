@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ContentModel } from '../models/content.model';
 import { ConfigService } from './config.service';
 
@@ -19,43 +19,37 @@ export class ContentService {
   }
 
   create(
-    groupId: string,
+    visibleGroupList: { id: string; visible: boolean }[],
     name: string,
     description: string,
     categoryId: string,
-    contentTypeId: string,
-    thumbnail: any = null,
-    media: any = null
+    contentType: string,
+    link?: string
   ): Observable<ContentModel> {
-    if (thumbnail == null || media == null) {
-      return this.httpClient.post(`${this.configService.getApiUrl()}/content`, {
-        groupId,
-        name,
-        description,
-        categoryId,
-        contentTypeId,
-      }) as Observable<ContentModel>;
-    } else {
-      return this.httpClient
-        .post(`${this.configService.getApiUrl()}/content`, {
-          groupId,
-          name,
-          categoryId,
-          contentTypeId,
-        })
-        .pipe(
-          switchMap((content: ContentModel) => this.updateThumbnail(content.id, thumbnail)),
-          switchMap((content: ContentModel) => this.updateMedia(content.id, media))
-        ) as Observable<ContentModel>;
-    }
+    return this.httpClient.post(`${this.configService.getApiUrl()}/content`, {
+      visibleGroupList,
+      name,
+      description,
+      categoryId,
+      contentType,
+      link,
+    }) as Observable<ContentModel>;
   }
 
-  update(id: string, groupId: string, name: string, categoryId: string, contentTypeId: string): Observable<ContentModel> {
+  update(
+    id: string,
+    visibleGroupList: { id: string; visible: boolean }[],
+    name: string,
+    description: string,
+    categoryId: string,
+    contentType: string
+  ): Observable<ContentModel> {
     return this.httpClient.put(`${this.configService.getApiUrl()}/content/${id}`, {
-      groupId,
+      visibleGroupList,
       name,
+      description,
+      contentType,
       categoryId,
-      contentTypeId,
     }) as Observable<ContentModel>;
   }
 

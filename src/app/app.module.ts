@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { JwtModule } from '@auth0/angular-jwt';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
@@ -34,6 +35,11 @@ import { RegisterFormComponent } from './components/forms/register-form/register
 import { ServerFormComponent } from './components/forms/server-form/server-form.component';
 import { SigninFormComponent } from './components/forms/signin-form/signin-form.component';
 import { HeaderComponent } from './components/header/header.component';
+import { CheckboxInputComponent } from './components/inputs/checkbox-input/checkbox-input.component';
+import { ListInputComponent } from './components/inputs/list-input/list-input.component';
+import { RadioInputComponent } from './components/inputs/radio-input/radio-input.component';
+import { ToggleInputComponent } from './components/inputs/toggle-input/toggle-input.component';
+import { ToggleMultiStateInputComponent } from './components/inputs/toggle-multi-state-input/toggle-multi-state-input.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { MessageComponent } from './components/message/message.component';
 import { MessagesComponent } from './components/messages/messages.component';
@@ -86,6 +92,11 @@ export function tokenGetter() {
     ManageServerComponent,
     EditCategoryComponent,
     EditContentComponent,
+    ToggleInputComponent,
+    CheckboxInputComponent,
+    RadioInputComponent,
+    ToggleMultiStateInputComponent,
+    ListInputComponent,
     DurationPipe,
     LetDirective,
   ],
@@ -109,6 +120,7 @@ export function tokenGetter() {
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([]),
     EffectsModule.forFeature(effects),
+    NgSelectModule,
   ],
   providers: [
     { provide: RouterStateSerializer, useClass: CustomSerializer },
