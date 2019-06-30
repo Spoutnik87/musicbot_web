@@ -1,6 +1,9 @@
 import { createSelector } from '@ngrx/store';
+import { find } from 'lodash';
+import { ContentModel } from 'src/app/models/content.model';
 import { IAppState } from '../reducers';
 import * as fromServers from '../reducers/servers.reducer';
+import { getContents } from './contents.selectors';
 
 export const getServersState = (state: IAppState) => state.servers;
 
@@ -47,4 +50,22 @@ export const getServerUpdating = createSelector(
 export const getServerUpdated = createSelector(
   getServerState,
   (serverState: fromServers.IServerState) => (serverState ? serverState.updated : undefined)
+);
+
+export const getServerStateByContentId = createSelector(
+  getServersState,
+  getContents,
+  (serversState: fromServers.IServersState, contents: ContentModel[], props: { id: string }) => {
+    const content = find(contents, it => it.id === props.id);
+    if (content == null) {
+      return undefined;
+    }
+    for (const serverId of serversState.ids) {
+      const serverState = serversState.entities[serverId];
+      if (content.serverId === serverState.server.id) {
+        return serverState;
+      }
+    }
+    return undefined;
+  }
 );

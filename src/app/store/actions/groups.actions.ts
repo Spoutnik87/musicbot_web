@@ -23,6 +23,10 @@ export const DELETE_GROUP = 'DELETE_GROUP';
 export const DELETE_GROUP_SUCCESS = 'DELETE_GROUP_SUCCESS';
 export const DELETE_GROUP_FAIL = 'DELETE_GROUP_FAIL';
 
+export const FETCH_GROUP_THUMBNAIL = 'FETCH_GROUP_THUMBNAIL';
+export const FETCH_GROUP_THUMBNAIL_SUCCESS = 'FETCH_GROUP_THUMBNAIL_SUCCESS';
+export const FETCH_GROUP_THUMBNAIL_FAIL = 'FETCH_GROUP_THUMBNAIL_FAIL';
+
 export const ADD_GROUPS = 'ADD_GROUPS';
 export const ADD_GROUP = 'ADD_GROUP';
 
@@ -225,6 +229,45 @@ export class DeleteGroupFail implements Action {
   }
 }
 
+export class FetchGroupThumbnail implements Action {
+  readonly type = FETCH_GROUP_THUMBNAIL;
+  payload: string;
+
+  constructor(id: string) {
+    this.payload = id;
+  }
+}
+
+export class FetchGroupThumbnailSuccess implements Action {
+  readonly type = FETCH_GROUP_THUMBNAIL_SUCCESS;
+  payload: {
+    id: string;
+    thumbnailURL: string;
+  };
+
+  constructor(id: string, thumbnailURL: string) {
+    this.payload = {
+      id,
+      thumbnailURL,
+    };
+  }
+}
+
+export class FetchGroupThumbnailFail implements Action {
+  readonly type = FETCH_GROUP_THUMBNAIL_FAIL;
+  payload: {
+    id: string;
+    error: any;
+  };
+
+  constructor(id: string, error: any) {
+    this.payload = {
+      id,
+      error,
+    };
+  }
+}
+
 export class AddGroups implements Action {
   readonly type = ADD_GROUPS;
   payload: GroupModel[];
@@ -260,5 +303,8 @@ export type GroupsAction =
   | DeleteGroup
   | DeleteGroupSuccess
   | DeleteGroupFail
+  | FetchGroupThumbnail
+  | FetchGroupThumbnailSuccess
+  | FetchGroupThumbnailFail
   | AddGroups
   | AddGroup;

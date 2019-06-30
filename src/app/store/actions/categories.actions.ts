@@ -23,6 +23,10 @@ export const DELETE_CATEGORY = 'DELETE_CATEGORY';
 export const DELETE_CATEGORY_SUCCESS = 'DELETE_CATEGORY_SUCCESS';
 export const DELETE_CATEGORY_FAIL = 'DELETE_CATEGORY_FAIL';
 
+export const FETCH_CATEGORY_THUMBNAIL = 'FETCH_CATEGORY_THUMBNAIL';
+export const FETCH_CATEGORY_THUMBNAIL_SUCCESS = 'FETCH_CATEGORY_THUMBNAIL_SUCCESS';
+export const FETCH_CATEGORY_THUMBNAIL_FAIL = 'FETCH_CATEGORY_THUMBNAIL_FAIL';
+
 export const ADD_CATEGORIES = 'ADD_CATEGORIES';
 export const ADD_CATEGORY = 'ADD_CATEGORY';
 
@@ -223,6 +227,45 @@ export class DeleteCategoryFail implements Action {
   }
 }
 
+export class FetchCategoryThumbnail implements Action {
+  readonly type = FETCH_CATEGORY_THUMBNAIL;
+  payload: string;
+
+  constructor(id: string) {
+    this.payload = id;
+  }
+}
+
+export class FetchCategoryThumbnailSuccess implements Action {
+  readonly type = FETCH_CATEGORY_THUMBNAIL_SUCCESS;
+  payload: {
+    id: string;
+    thumbnailURL: string;
+  };
+
+  constructor(id: string, thumbnailURL: string) {
+    this.payload = {
+      id,
+      thumbnailURL,
+    };
+  }
+}
+
+export class FetchCategoryThumbnailFail implements Action {
+  readonly type = FETCH_CATEGORY_THUMBNAIL_FAIL;
+  payload: {
+    id: string;
+    error: any;
+  };
+
+  constructor(id: string, error: any) {
+    this.payload = {
+      id,
+      error,
+    };
+  }
+}
+
 export class AddCategories implements Action {
   readonly type = ADD_CATEGORIES;
   payload: CategoryModel[];
@@ -258,5 +301,8 @@ export type CategoriesAction =
   | DeleteCategory
   | DeleteCategorySuccess
   | DeleteCategoryFail
+  | FetchCategoryThumbnail
+  | FetchCategoryThumbnailSuccess
+  | FetchCategoryThumbnailFail
   | AddCategories
   | AddCategory;

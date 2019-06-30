@@ -10,6 +10,7 @@ import {
   FETCH_CATEGORY,
   FETCH_CATEGORY_FAIL,
   FETCH_CATEGORY_SUCCESS,
+  FETCH_CATEGORY_THUMBNAIL_SUCCESS,
   FETCH_SERVER_CATEGORIES,
   FETCH_SERVER_CATEGORIES_FAIL,
   FETCH_SERVER_CATEGORIES_SUCCESS,
@@ -87,7 +88,10 @@ export function categoriesReducer(state = initialState, action: CategoriesAction
       return categoriesAdapter.upsertOne(
         {
           ...state.entities[action.payload.id],
-          category: action.payload,
+          category: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].category),
+            ...action.payload,
+          },
           loading: false,
           loaded: true,
         },
@@ -143,6 +147,18 @@ export function categoriesReducer(state = initialState, action: CategoriesAction
       );
     case DELETE_CATEGORY_SUCCESS:
       return categoriesAdapter.removeOne(action.payload.id, state);
+    case FETCH_CATEGORY_THUMBNAIL_SUCCESS:
+      return categoriesAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.id],
+          category: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].category),
+            id: action.payload.id,
+            thumbnailURL: action.payload.thumbnailURL,
+          },
+        },
+        state
+      );
     case ADD_CATEGORIES:
       return categoriesAdapter.upsertMany(
         action.payload.map(category => ({

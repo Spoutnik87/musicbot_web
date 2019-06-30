@@ -32,6 +32,7 @@ import {
   FETCH_SERVER,
   FETCH_SERVER_FAIL,
   FETCH_SERVER_SUCCESS,
+  FETCH_SERVER_THUMBNAIL_SUCCESS,
   FETCH_SERVERS,
   FETCH_SERVERS_FAIL,
   FETCH_SERVERS_SUCCESS,
@@ -117,7 +118,10 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
       return serversAdapter.upsertOne(
         {
           ...state.entities[action.payload.id],
-          server: action.payload,
+          server: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].server),
+            ...action.payload,
+          },
           loading: false,
           loaded: true,
         },
@@ -175,6 +179,18 @@ export function serversReducer(state = initialState, action: ServersAction | Sto
       );
     case DELETE_SERVER_SUCCESS:
       return serversAdapter.removeOne(action.payload.id, state);
+    case FETCH_SERVER_THUMBNAIL_SUCCESS:
+      return serversAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.id],
+          server: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].server),
+            id: action.payload.id,
+            thumbnailURL: action.payload.thumbnailURL,
+          },
+        },
+        state
+      );
     case ADD_SERVERS:
       return serversAdapter.upsertMany(
         action.payload.map(server => ({

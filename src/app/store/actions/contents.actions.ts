@@ -75,10 +75,16 @@ export class FetchServerContentsFail implements Action {
 
 export class FetchContent implements Action {
   readonly type = FETCH_CONTENT;
-  payload: string;
+  payload: {
+    id: string;
+    full: boolean;
+  };
 
-  constructor(id: string) {
-    this.payload = id;
+  constructor(id: string, full = false) {
+    this.payload = {
+      id,
+      full,
+    };
   }
 }
 

@@ -16,10 +16,14 @@ import {
   FetchCategory,
   FetchCategoryFail,
   FetchCategorySuccess,
+  FetchCategoryThumbnail,
+  FetchCategoryThumbnailFail,
+  FetchCategoryThumbnailSuccess,
   FetchServerCategories,
   FetchServerCategoriesFail,
   FetchServerCategoriesSuccess,
   FETCH_CATEGORY,
+  FETCH_CATEGORY_THUMBNAIL,
   FETCH_SERVER_CATEGORIES,
   UpdateCategory,
   UpdateCategoryFail,
@@ -49,6 +53,17 @@ export class CategoriesEffects {
       this.categoryService.getById(action.payload).pipe(
         mergeMap(category => [new FetchCategorySuccess(category)]),
         catchError(error => of(new FetchCategoryFail(action.payload, error)))
+      )
+    )
+  );
+
+  @Effect()
+  fetchCategoryThumbnail$ = this.action$.pipe(
+    ofType(FETCH_CATEGORY_THUMBNAIL),
+    switchMap((action: FetchCategoryThumbnail) =>
+      this.categoryService.getThumbnail(action.payload).pipe(
+        mergeMap(thumbnailURL => [new FetchCategoryThumbnailSuccess(action.payload, thumbnailURL)]),
+        catchError(error => of(new FetchCategoryThumbnailFail(action.payload, error)))
       )
     )
   );

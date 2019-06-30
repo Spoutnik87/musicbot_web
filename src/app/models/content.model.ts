@@ -4,11 +4,7 @@ export interface ContentModel {
   id: string;
   name: string;
   description: string;
-  mimeType?: string;
-  mediaSize?: number;
   thumbnailSize?: number;
-  media: boolean;
-  thumbnail: boolean;
   contentTypeId: number;
   categoryId: number;
   serverId: string;
@@ -18,4 +14,11 @@ export interface ContentModel {
    * Track duration in millis
    */
   duration: number;
+  localMetadata?: {
+    mimeType: string;
+    mediaSize: number;
+  };
+  youtubeMetadata?: {
+    videoId: string;
+  };
 }

@@ -74,6 +74,6 @@ export class ContentService {
       .get(`${this.configService.getApiUrl()}/content/${id}/thumbnail`, {
         responseType: 'blob',
       })
-      .pipe(map(blob => this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(blob)))) as Observable<string>;
+      .pipe(map(blob => URL.createObjectURL(blob))) as Observable<string>;
   }
 }

@@ -24,6 +24,10 @@ export const DELETE_SERVER = 'DELETE_SERVER';
 export const DELETE_SERVER_SUCCESS = 'DELETE_SERVER_SUCCESS';
 export const DELETE_SERVER_FAIL = 'DELETE_SERVER_FAIL';
 
+export const FETCH_SERVER_THUMBNAIL = 'FETCH_SERVER_THUMBNAIL';
+export const FETCH_SERVER_THUMBNAIL_SUCCESS = 'FETCH_SERVER_THUMBNAIL_SUCCESS';
+export const FETCH_SERVER_THUMBNAIL_FAIL = 'FETCH_SERVER_THUMBNAIL_FAIL';
+
 export const SET_SERVER_STATUS = 'SET_SERVER_STATUS';
 
 export const ADD_SERVERS = 'ADD_SERVERS';
@@ -207,6 +211,45 @@ export class DeleteServerFail implements Action {
   }
 }
 
+export class FetchServerThumbnail implements Action {
+  readonly type = FETCH_SERVER_THUMBNAIL;
+  payload: string;
+
+  constructor(id: string) {
+    this.payload = id;
+  }
+}
+
+export class FetchServerThumbnailSuccess implements Action {
+  readonly type = FETCH_SERVER_THUMBNAIL_SUCCESS;
+  payload: {
+    id: string;
+    thumbnailURL: string;
+  };
+
+  constructor(id: string, thumbnailURL: string) {
+    this.payload = {
+      id,
+      thumbnailURL,
+    };
+  }
+}
+
+export class FetchServerThumbnailFail implements Action {
+  readonly type = FETCH_SERVER_THUMBNAIL_FAIL;
+  payload: {
+    id: string;
+    error: any;
+  };
+
+  constructor(id: string, error: any) {
+    this.payload = {
+      id,
+      error,
+    };
+  }
+}
+
 export class SetServerStatus implements Action {
   readonly type = SET_SERVER_STATUS;
   payload: {
@@ -257,6 +300,9 @@ export type ServersAction =
   | DeleteServer
   | DeleteServerSuccess
   | DeleteServerFail
+  | FetchServerThumbnail
+  | FetchServerThumbnailSuccess
+  | FetchServerThumbnailFail
   | SetServerStatus
   | AddServers
   | AddServer;

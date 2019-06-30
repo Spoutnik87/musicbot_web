@@ -4,4 +4,5 @@ export interface ServerModel {
   id: string;
   name: string;
   status?: ServerStatusModel;
+  thumbnailURL?: string;
 }

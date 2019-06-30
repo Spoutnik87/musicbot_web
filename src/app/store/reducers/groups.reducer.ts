@@ -9,6 +9,7 @@ import {
   FETCH_GROUP,
   FETCH_GROUP_FAIL,
   FETCH_GROUP_SUCCESS,
+  FETCH_GROUP_THUMBNAIL_SUCCESS,
   FETCH_SERVER_GROUPS,
   FETCH_SERVER_GROUPS_FAIL,
   FETCH_SERVER_GROUPS_SUCCESS,
@@ -87,7 +88,10 @@ export function groupsReducer(state = initialState, action: GroupsAction | Store
       return groupsAdapter.upsertOne(
         {
           ...state.entities[action.payload.id],
-          group: action.payload,
+          group: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].group),
+            ...action.payload,
+          },
           loading: false,
           loaded: true,
         },
@@ -143,6 +147,18 @@ export function groupsReducer(state = initialState, action: GroupsAction | Store
       );
     case DELETE_GROUP_SUCCESS:
       return groupsAdapter.removeOne(action.payload.id, state);
+    case FETCH_GROUP_THUMBNAIL_SUCCESS:
+      return groupsAdapter.upsertOne(
+        {
+          ...state.entities[action.payload.id],
+          group: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].group),
+            id: action.payload.id,
+            thumbnailURL: action.payload.thumbnailURL,
+          },
+        },
+        state
+      );
     case ADD_GROUPS:
       return groupsAdapter.upsertMany(
         action.payload.map(group => ({

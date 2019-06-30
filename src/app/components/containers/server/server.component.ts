@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { faCopy, faSync } from '@fortawesome/free-solid-svg-icons';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -44,6 +44,7 @@ export class ServerComponent {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private store: Store<IAppState>,
     private serverService: ServerService,
     private configService: ConfigService,
@@ -57,7 +58,9 @@ export class ServerComponent {
     this.store.dispatch(new FetchServer(this.serverId));
   }
 
-  onShow(event: { id: string; status: ServerStatusModel }) {}
+  onShow(event: { id: string; status: ServerStatusModel }) {
+    this.router.navigateByUrl('content/' + event.id);
+  }
 
   onPlay(event: { id: string; status: ServerStatusModel }) {
     this.store.dispatch(new PlayContentCommand(this.serverId, event.id));

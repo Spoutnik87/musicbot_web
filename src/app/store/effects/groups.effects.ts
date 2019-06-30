@@ -16,10 +16,14 @@ import {
   FetchGroup,
   FetchGroupFail,
   FetchGroupSuccess,
+  FetchGroupThumbnail,
+  FetchGroupThumbnailFail,
+  FetchGroupThumbnailSuccess,
   FetchServerGroups,
   FetchServerGroupsFail,
   FetchServerGroupsSuccess,
   FETCH_GROUP,
+  FETCH_GROUP_THUMBNAIL,
   FETCH_SERVER_GROUPS,
   UpdateGroup,
   UpdateGroupFail,
@@ -49,6 +53,17 @@ export class GroupsEffects {
       this.groupService.getById(action.payload).pipe(
         mergeMap(group => [new FetchGroupSuccess(group)]),
         catchError(error => of(new FetchGroupFail(action.payload, error)))
+      )
+    )
+  );
+
+  @Effect()
+  fetchGroupThumbnail$ = this.action$.pipe(
+    ofType(FETCH_GROUP_THUMBNAIL),
+    switchMap((action: FetchGroupThumbnail) =>
+      this.groupService.getThumbnail(action.payload).pipe(
+        mergeMap(thumbnailURL => [new FetchGroupThumbnailSuccess(action.payload, thumbnailURL)]),
+        catchError(error => of(new FetchGroupThumbnailFail(action.payload, error)))
       )
     )
   );

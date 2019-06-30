@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <ng-container *ngIf="contentState$ | async as contentState">
+    <app-card title="Voir un contenu" *ngIf="contentState.loaded">
+      <div class="row">
+        <div class="ml-2">
+          <app-thumbnail [imageURL]="contentState.content.thumbnailURL" width="200" height="200"></app-thumbnail>
+        </div>
+        <div class="flex-grow-1 mt-2 ml-4 mr-4">
+          <span class="font-weight-bold">{{ contentState.content.name }}</span>
+          <div class="float-right">
+            <a title="Modifier" [routerLink]="'/edit-content/' + contentState.content.id" class="btn btn-primary"
+              ><fa-icon [icon]="faEdit"></fa-icon
+            ></a>
+            <button title="Supprimer" class="btn btn-danger ml-2" (click)="onDelete(contentState.content.id)">
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+          </div>
+          <hr class="mt-4" />
+          <div>
+            {{ contentState.content.description }}
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-12">Contenu créé le :</div>
+        <div class="col-sm-12">Durée : {{ contentState.content.duration | duration }}</div>
+        <div class="col-sm-12">
+          Serveur :
+          <div *appLet="serverState$ | async as serverState" class="mt-2 row">
+            <div class="ml-3 mini-card" (click)="onServerRedirect(serverState.server.id)">
+              <app-thumbnail [imageURL]="serverState.server.thumbnailURL" width="40" height="40"></app-thumbnail
+              ><span class="ml-2 font-weight-bold pr-5">{{ serverState.server.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-12">Visibilité :</div>
+        <div class="col-sm-12 row mt-2" *ngIf="visibleGroupsState$ | async as groupsState">
+          <div
+            *ngFor="let groupState of groupsState"
+            class="col-xs-12 col-sm-6 col-md-4 col-xl-3 mini-card ml-3"
+            (click)="onGroupRedirect(groupState.group.id)"
+          >
+            <app-thumbnail [imageURL]="groupState.group.thumbnailURL" width="40" height="40"></app-thumbnail
+            ><span class="ml-2 font-weight-bold">{{ groupState.group.name }}</span>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </ng-container>
+</div>

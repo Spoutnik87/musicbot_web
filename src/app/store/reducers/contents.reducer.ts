@@ -74,8 +74,8 @@ export function contentsReducer(state = initialState, action: ContentsAction | S
       return contentsAdapter.upsertOne(
         {
           content: {
-            ...(state.entities[action.payload] && state.entities[action.payload].content),
-            id: action.payload,
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].content),
+            id: action.payload.id,
           },
           loading: true,
           loaded: false,
@@ -88,7 +88,10 @@ export function contentsReducer(state = initialState, action: ContentsAction | S
       return contentsAdapter.upsertOne(
         {
           ...state.entities[action.payload.id],
-          content: action.payload,
+          content: {
+            ...(state.entities[action.payload.id] && state.entities[action.payload.id].content),
+            ...action.payload,
+          },
           loading: false,
           loaded: true,
         },

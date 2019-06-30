@@ -6,4 +6,5 @@ export interface GroupModel {
   serverId: string;
   member?: boolean;
   permissions?: Permission[];
+  thumbnailURL?: string;
 }

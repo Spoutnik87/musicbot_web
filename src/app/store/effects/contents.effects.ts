@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ofType, Actions, Effect } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { ContentService } from 'src/app/services';
@@ -19,9 +20,13 @@ import {
   FetchContentThumbnail,
   FetchContentThumbnailFail,
   FetchContentThumbnailSuccess,
+  FetchGroup,
+  FetchGroupThumbnail,
+  FetchServer,
   FetchServerContents,
   FetchServerContentsFail,
   FetchServerContentsSuccess,
+  FetchServerThumbnail,
   FETCH_CONTENT,
   FETCH_CONTENT_THUMBNAIL,
   FETCH_SERVER_CONTENTS,
@@ -30,10 +35,11 @@ import {
   UpdateContentSuccess,
   UPDATE_CONTENT,
 } from '../actions';
+import { IAppState } from '../reducers';
 
 @Injectable()
 export class ContentsEffects {
-  constructor(private action$: Actions, private contentService: ContentService, private router: Router) {}
+  constructor(private action$: Actions, private contentService: ContentService, private router: Router, private store: Store<IAppState>) {}
 
   @Effect()
   fetchServerContents$ = this.action$.pipe(
@@ -50,20 +56,27 @@ export class ContentsEffects {
   fetchContent$ = this.action$.pipe(
     ofType(FETCH_CONTENT),
     switchMap((action: FetchContent) =>
-      this.contentService.getById(action.payload).pipe(
-        mergeMap(content => [new FetchContentSuccess(content)]),
-        catchError(error => of(new FetchContentFail(action.payload, error)))
+      this.contentService.getById(action.payload.id).pipe(
+        mergeMap(content => {
+          if (action.payload.full) {
+            this.store.dispatch(new FetchServer(content.serverId));
+            this.store.dispatch(new FetchServerThumbnail(content.serverId));
+            for (const group of content.groups) {
+              this.store.dispatch(new FetchGroup(group.id));
+              this.store.dispatch(new FetchGroupThumbnail(group.id));
+            }
+          }
+          return [new FetchContentSuccess(content)];
+        }),
+        catchError(error => of(new FetchContentFail(action.payload.id, error)))
       )
     )
   );
 
-  /**
-   * Mergemap is used to allow concurrent requests.
-   */
   @Effect()
   fetchContentThumbnail$ = this.action$.pipe(
     ofType(FETCH_CONTENT_THUMBNAIL),
-    mergeMap((action: FetchContentThumbnail) =>
+    switchMap((action: FetchContentThumbnail) =>
       this.contentService.getThumbnail(action.payload).pipe(
         mergeMap(thumbnailURL => [new FetchContentThumbnailSuccess(action.payload, thumbnailURL)]),
         catchError(error => of(new FetchContentThumbnailFail(action.payload, error)))
@@ -121,7 +134,10 @@ export class ContentsEffects {
     ofType(DELETE_CONTENT),
     switchMap((action: DeleteContent) =>
       this.contentService.delete(action.payload.id).pipe(
-        mergeMap(() => [new DeleteContentSuccess(action.payload.id)]),
+        mergeMap(() => {
+          this.router.navigateByUrl('/');
+          return [new DeleteContentSuccess(action.payload.id)];
+        }),
         catchError(error => of(new DeleteContentFail(action.payload.id, error)))
       )
     )

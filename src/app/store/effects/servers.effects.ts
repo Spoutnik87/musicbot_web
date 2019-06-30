@@ -19,7 +19,11 @@ import {
   FetchServersSuccess,
   FetchServerFail,
   FetchServerSuccess,
+  FetchServerThumbnail,
+  FetchServerThumbnailFail,
+  FetchServerThumbnailSuccess,
   FETCH_SERVER,
+  FETCH_SERVER_THUMBNAIL,
   FETCH_SERVERS,
   UpdateServer,
   UpdateServerFail,
@@ -49,6 +53,17 @@ export class ServersEffects {
       this.serverService.getById(action.payload).pipe(
         mergeMap(server => [new FetchServerSuccess(server)]),
         catchError(error => of(new FetchServerFail(action.payload, error)))
+      )
+    )
+  );
+
+  @Effect()
+  fetchServerThumbnail$ = this.action$.pipe(
+    ofType(FETCH_SERVER_THUMBNAIL),
+    switchMap((action: FetchServerThumbnail) =>
+      this.serverService.getThumbnail(action.payload).pipe(
+        mergeMap(thumbnailURL => [new FetchServerThumbnailSuccess(action.payload, thumbnailURL)]),
+        catchError(error => of(new FetchServerThumbnailFail(action.payload, error)))
       )
     )
   );

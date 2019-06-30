@@ -1,7 +1,10 @@
 import { createSelector } from '@ngrx/store';
+import { find } from 'lodash';
+import { ContentModel } from 'src/app/models/content.model';
 import { GroupModel } from 'src/app/models/group.model';
 import { IAppState } from '../reducers';
 import * as fromGroups from '../reducers/groups.reducer';
+import { getContents } from './contents.selectors';
 
 export const getGroupsState = (state: IAppState) => state.groups;
 
@@ -53,4 +56,23 @@ export const getGroupUpdating = createSelector(
 export const getGroupUpdated = createSelector(
   getGroupState,
   (groupState: fromGroups.IGroupState) => (groupState ? groupState.updated : undefined)
+);
+
+export const getVisibleGroupsState = createSelector(
+  getGroupsState,
+  getContents,
+  (groupsState: fromGroups.IGroupsState, contents: ContentModel[], props: { id: string }) => {
+    const content = find(contents, it => it.id === props.id);
+    if (content == null) {
+      return [];
+    }
+    const groups: fromGroups.IGroupState[] = [];
+    for (const groupId of groupsState.ids) {
+      const groupState = groupsState.entities[groupId];
+      if (content.groups.find(it => it.id === groupState.group.id) != null) {
+        groups.push(groupState);
+      }
+    }
+    return groups;
+  }
 );
