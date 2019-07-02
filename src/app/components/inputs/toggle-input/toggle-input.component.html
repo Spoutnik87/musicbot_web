@@ -1,5 +1,5 @@
 <label class="switch">
   <div class="label">{{ label }}</div>
-  <input type="checkbox" [name]="name" [(ngModel)]="toggleValue" />
+  <input type="checkbox" [name]="name" [(ngModel)]="toggleValue" [disabled]="disabled" />
   <span class="slider"></span>
 </label>

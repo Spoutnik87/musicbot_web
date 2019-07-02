@@ -5,21 +5,25 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   templateUrl: './toggle-multi-state-input.component.html',
   styleUrls: ['./toggle-multi-state-input.component.css'],
 })
-export class ToggleMultiStateInputComponent implements OnInit {
+export class ToggleMultiStateInputComponent {
   @Input()
   name = '';
 
   @Input()
   label = '';
 
+  @Input()
+  disabled = false;
+
   value = 0;
 
   @Output()
   change = new EventEmitter();
 
-  ngOnInit() {}
-
   onChange(event) {
+    if (this.disabled) {
+      return;
+    }
     switch (event.srcElement.className) {
       case 'state1-container':
         this.value = -1;
@@ -30,5 +34,6 @@ export class ToggleMultiStateInputComponent implements OnInit {
       case 'state3-container':
         this.value = 1;
     }
+    this.change.emit(this.value);
   }
 }
