@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faGhost, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { Store } from '@ngrx/store';
-import { getServers, getServersLoading, FetchServers, IAppState } from 'src/app/store';
+import { ServersQuery } from 'src/app/store/servers/servers.query';
+import { ServersService } from 'src/app/store/servers/servers.service';
 
 @Component({
   selector: 'app-server-list',
@@ -13,11 +13,11 @@ export class ServerListComponent {
   faPlusSquare = faPlusSquare;
   faGhost = faGhost;
 
-  servers$ = this.store.select(getServers);
-  serversLoading$ = this.store.select(getServersLoading);
+  servers$ = this.serversQuery.servers$;
+  serversLoading$ = this.serversQuery.selectLoading();
 
-  constructor(private store: Store<IAppState>, private router: Router) {
-    this.store.dispatch(new FetchServers());
+  constructor(private router: Router, private serversService: ServersService, private serversQuery: ServersQuery) {
+    this.serversService.getAll();
   }
 
   onSelect(id: string) {

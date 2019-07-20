@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { getCategoryState, FetchCategory, IAppState, UpdateCategory } from 'src/app/store';
+import { CategoriesQuery } from 'src/app/store/categories/categories.query';
+import { CategoriesService } from 'src/app/store/categories/categories.service';
 
 @Component({
   selector: 'app-edit-category',
@@ -10,16 +10,21 @@ import { getCategoryState, FetchCategory, IAppState, UpdateCategory } from 'src/
 export class EditCategoryComponent {
   categoryId = this.route.snapshot.paramMap.get('id');
 
-  categoryState = this.store.select(getCategoryState, { id: this.categoryId });
+  categoryState = this.categoriesQuery.selectEntity(this.categoryId);
 
   loading = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private store: Store<IAppState>) {
-    this.store.dispatch(new FetchCategory(this.categoryId));
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private categoriesQuery: CategoriesQuery,
+    private categoriesService: CategoriesService
+  ) {
+    this.categoriesService.getById(this.categoryId);
   }
 
   onSubmit(event: { name: string }) {
-    this.store.dispatch(new UpdateCategory(this.categoryId, event.name));
+    this.categoriesService.update(this.categoryId, event.name);
   }
 
   onCancel(serverId: string) {

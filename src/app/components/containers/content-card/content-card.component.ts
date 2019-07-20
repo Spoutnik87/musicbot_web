@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faEye, faPlay } from '@fortawesome/free-solid-svg-icons';
-import { Store } from '@ngrx/store';
 import { ContentModel } from 'src/app/models/content.model';
-import { FetchContentThumbnail, IAppState } from 'src/app/store';
+import { ContentsService } from 'src/app/store/contents/contents.service';
 
 @Component({
   selector: 'app-content-card',
@@ -21,11 +20,11 @@ export class ContentCardComponent implements OnInit {
   @Output()
   show = new EventEmitter<string>();
 
-  constructor(private store: Store<IAppState>) {}
+  constructor(private contentsService: ContentsService) {}
 
   ngOnInit() {
     if (this.content.thumbnailURL == null) {
-      this.store.dispatch(new FetchContentThumbnail(this.content.id));
+      this.contentsService.getThumbnail(this.content.id);
     }
   }
 

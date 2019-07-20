@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { getContentState, FetchContent, FetchContentThumbnail, IAppState, UpdateContent } from 'src/app/store';
+import { ContentsQuery } from 'src/app/store/contents/contents.query';
+import { ContentsService } from 'src/app/store/contents/contents.service';
 
 @Component({
   selector: 'app-edit-content',
@@ -10,13 +10,18 @@ import { getContentState, FetchContent, FetchContentThumbnail, IAppState, Update
 export class EditContentComponent {
   contentId = this.route.snapshot.paramMap.get('id');
 
-  contentState$ = this.store.select(getContentState, { id: this.contentId });
+  contentState$ = this.contentsQuery.selectEntity(this.contentId);
 
   loading = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private store: Store<IAppState>) {
-    this.store.dispatch(new FetchContent(this.contentId));
-    this.store.dispatch(new FetchContentThumbnail(this.contentId));
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private contentsQuery: ContentsQuery,
+    private contentsService: ContentsService
+  ) {
+    this.contentsService.getById(this.contentId);
+    this.contentsService.getThumbnail(this.contentId);
   }
 
   onSubmit(event: {
@@ -29,9 +34,7 @@ export class EditContentComponent {
       visible: boolean;
     }[];
   }) {
-    this.store.dispatch(
-      new UpdateContent(this.contentId, event.visibleGroupList, event.name, event.description, event.categoryId, event.contentType)
-    );
+    this.contentsService.update(this.contentId, event.visibleGroupList, event.name, event.description, event.categoryId, event.contentType);
   }
 
   onCancel(serverId: string) {

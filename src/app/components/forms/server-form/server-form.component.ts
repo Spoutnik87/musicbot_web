@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { faArrowCircleLeft, faArrowCircleRight, faCheck, faCopy, faSave } from '@fortawesome/free-solid-svg-icons';
 import { of } from 'rxjs';
-import { delay, map, switchMap, tap } from 'rxjs/operators';
-import { ConfigService, UserService } from 'src/app/services';
+import { delay, map, switchMap } from 'rxjs/operators';
+import { ConfigService } from 'src/app/services';
+import { UsersService } from 'src/app/store/users/users.service';
 import { copyToClipboard } from 'src/app/utils';
 
 @Component({
@@ -44,7 +45,7 @@ export class ServerFormComponent {
       delay(0),
       switchMap(() => {
         this.serverJoinTokenLoading = true;
-        return this.userService.getServerJoinToken();
+        return this.usersService.getServerJoinToken();
       })
     )
     .pipe(
@@ -54,7 +55,7 @@ export class ServerFormComponent {
       })
     );
 
-  constructor(private router: Router, private configService: ConfigService, private userService: UserService) {
+  constructor(private router: Router, private configService: ConfigService, private usersService: UsersService) {
     this.server = {
       name: '',
     };

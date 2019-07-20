@@ -1,17 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Store } from '@ngrx/store';
-import {
-  getContentState,
-  getServerState,
-  getServerStateByContentId,
-  getVisibleGroupsState,
-  DeleteContent,
-  FetchContent,
-  FetchContentThumbnail,
-  IAppState,
-} from 'src/app/store';
+import { ContentsQuery } from 'src/app/store/contents/contents.query';
+import { ContentsService } from 'src/app/store/contents/contents.service';
+import { GroupsQuery } from 'src/app/store/groups/groups.query';
+import { ServersQuery } from 'src/app/store/servers/servers.query';
 
 @Component({
   selector: 'app-content',
@@ -24,21 +17,28 @@ export class ContentComponent implements OnInit {
 
   contentId = this.route.snapshot.paramMap.get('id');
 
-  contentState$ = this.store.select(getContentState, { id: this.contentId });
+  contentState$ = this.contentsQuery.selectEntity(this.contentId);
 
-  serverState$ = this.store.select(getServerStateByContentId, { id: this.contentId });
+  serverState$ = this.serversQuery.selectByContent(this.contentId);
 
-  visibleGroupsState$ = this.store.select(getVisibleGroupsState, { id: this.contentId });
+  visibleGroupsState$ = this.groupsQuery.selectByContent(this.contentId);
 
-  constructor(private store: Store<IAppState>, private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private contentsService: ContentsService,
+    private contentsQuery: ContentsQuery,
+    private serversQuery: ServersQuery,
+    private groupsQuery: GroupsQuery
+  ) {}
 
   ngOnInit() {
-    this.store.dispatch(new FetchContent(this.contentId, true));
-    this.store.dispatch(new FetchContentThumbnail(this.contentId));
+    this.contentsService.getById(this.contentId);
+    this.contentsService.getThumbnail(this.contentId);
   }
 
   onDelete(contentId: string) {
-    this.store.dispatch(new DeleteContent(contentId));
+    this.contentsService.delete(this.contentId);
   }
 
   onServerRedirect(serverId: string) {

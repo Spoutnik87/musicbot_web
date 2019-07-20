@@ -3,12 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { JwtModule } from '@auth0/angular-jwt';
+import { akitaConfig } from '@datorama/akita';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { EffectsModule } from '@ngrx/effects';
-import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
-import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Ng5SliderModule } from 'ng5-slider';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -59,12 +57,15 @@ import { ServerStatusHelper } from './helpers/server-status.helper';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { DurationPipe } from './pipes/duration.pipe';
 import { services } from './services';
-import { effects } from './store/effects';
-import { metaReducers, reducers, CustomSerializer } from './store/reducers';
+import { akitaServices } from './store';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
+
+akitaConfig({
+  resettable: true,
+});
 
 @NgModule({
   declarations: [
@@ -127,15 +128,10 @@ export function tokenGetter() {
         blacklistedRoutes: [environment.domain + '/login'],
       },
     }),
-    StoreModule.forRoot(reducers, { metaReducers }),
-    StoreRouterConnectingModule.forRoot(),
-    !environment.production ? StoreDevtoolsModule.instrument() : [],
-    EffectsModule.forRoot([]),
-    EffectsModule.forFeature(effects),
+    !environment.production ? AkitaNgDevtools.forRoot() : [],
     NgSelectModule,
   ],
   providers: [
-    { provide: RouterStateSerializer, useClass: CustomSerializer },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
@@ -145,6 +141,7 @@ export function tokenGetter() {
     ...services,
     ...guards,
     ServerStatusHelper,
+    ...akitaServices,
   ],
   bootstrap: [AppComponent],
 })

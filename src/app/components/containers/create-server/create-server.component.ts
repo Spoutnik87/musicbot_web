@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { CreateServer, IAppState } from 'src/app/store';
+import { ServersService } from 'src/app/store/servers/servers.service';
 
 @Component({
   selector: 'app-create-server',
@@ -10,10 +9,15 @@ import { CreateServer, IAppState } from 'src/app/store';
 export class CreateServerComponent {
   loading = false;
 
-  constructor(private store: Store<IAppState>, private router: Router) {}
+  constructor(private router: Router, private serversService: ServersService) {}
 
   onSubmit(event: { name: string }) {
-    this.store.dispatch(new CreateServer(event.name));
+    this.serversService.create(event.name).subscribe(
+      serverId => {
+        this.router.navigateByUrl('/server/' + serverId);
+      },
+      () => {}
+    );
   }
 
   onCancel() {
