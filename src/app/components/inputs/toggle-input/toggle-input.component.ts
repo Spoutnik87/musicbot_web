@@ -15,6 +15,9 @@ export class ToggleInputComponent {
   @Input()
   value = false;
 
+  @Input()
+  disabled = false;
+
   @Output()
   valueChange = new EventEmitter();
 

@@ -92,3 +92,12 @@
 .state3.slider {
   border: 2px solid #69b26c;
 }
+
+.state-disabled {
+  cursor: default;
+}
+
+.slider-disabled {
+  border: 2px solid #747d8c;
+  background-color: #bdbbbb;
+}

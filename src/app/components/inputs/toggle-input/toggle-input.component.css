@@ -59,3 +59,9 @@ input:checked + .slider:before {
   transform: translateX(44px);
   background-color: #69b26c;
 }
+
+input:disabled + .slider {
+  border: 2px solid #747d8c;
+  cursor: default;
+  background-color: #bdbbbb;
+}

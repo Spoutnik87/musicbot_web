@@ -2,11 +2,6 @@
   position: relative;
 }
 
-.content-image {
-  display: block;
-  border-radius: 0.5em;
-}
-
 .content-overlay {
   position: absolute;
   top: 0;

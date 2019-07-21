@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { forkJoin } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { ContentStatusModel } from '../models/content-status.model';
 import { ServerStatusModel } from '../models/server-status.model';
-import { getAuthenticatedUser, getContent, IAppState, SetServerStatus } from '../store';
+import { ContentsQuery } from '../store/contents/contents.query';
+import { ServersService } from '../store/servers/servers.service';
+import { UsersQuery } from '../store/users/users.query';
 
 const addContentToQueue = (state: ServerStatusModel, content: ContentStatusModel): ServerStatusModel => {
   if (state == null) {
@@ -122,7 +123,7 @@ const resume = (state: ServerStatusModel) => {
 
 @Injectable()
 export class ServerStatusHelper {
-  constructor(private store: Store<IAppState>) {}
+  constructor(private serversService: ServersService, private contentsQuery: ContentsQuery, private usersQuery: UsersQuery) {}
 
   playContent(id: string, status: ServerStatusModel, contentId: string) {
     if (status == null) {
@@ -131,7 +132,7 @@ export class ServerStatusHelper {
         queue: [],
       };
     }
-    forkJoin([this.store.select(getContent, { id: contentId }).pipe(first()), this.store.select(getAuthenticatedUser).pipe(first())])
+    forkJoin([this.contentsQuery.selectContent(contentId).pipe(first()), this.usersQuery.authenticatedUser$.pipe(first())])
       .pipe(
         map(([content, authenticatedUser]) => {
           return {
@@ -149,17 +150,15 @@ export class ServerStatusHelper {
       )
       .subscribe(
         serverStatus => {
-          this.store.dispatch(new SetServerStatus(id, serverStatus));
+          this.serversService.setServerStatus(id, serverStatus);
         },
-        error => {
-          console.log(error);
-        }
+        error => {}
       );
   }
 
   playNextContent(id: string, status: ServerStatusModel) {
     const result = playNextContent(status);
-    this.store.dispatch(new SetServerStatus(id, result));
+    this.serversService.setServerStatus(id, result);
   }
 
   clearQueue(id: string, status: ServerStatusModel) {
@@ -173,21 +172,21 @@ export class ServerStatusHelper {
       id,
       queue: [],
     };
-    this.store.dispatch(new SetServerStatus(id, result));
+    this.serversService.setServerStatus(id, result);
   }
 
   setPosition(id: string, status: ServerStatusModel, position: number) {
     const result = setPlayingContentPosition(status, position);
-    this.store.dispatch(new SetServerStatus(id, result));
+    this.serversService.setServerStatus(id, result);
   }
 
   pause(id: string, status: ServerStatusModel) {
     const result = pause(status);
-    this.store.dispatch(new SetServerStatus(id, result));
+    this.serversService.setServerStatus(id, result);
   }
 
   resume(id: string, status: ServerStatusModel) {
     const result = resume(status);
-    this.store.dispatch(new SetServerStatus(id, result));
+    this.serversService.setServerStatus(id, result);
   }
 }

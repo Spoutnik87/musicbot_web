@@ -18,6 +18,8 @@ export class ServerStatusSliderComponent implements OnInit, OnDestroy {
 
   selecting = false;
 
+  stepElapsed = 0;
+
   @Input()
   set playing(playing: ContentStatusModel) {
     if (playing == null) {
@@ -37,39 +39,46 @@ export class ServerStatusSliderComponent implements OnInit, OnDestroy {
       this.refreshSubscription = null;
     }
     this._playing = playing;
+    this.stepElapsed = 250;
+    const ceil = Math.floor(this._playing.duration / 250);
     this.options = {
       floor: 0,
-      ceil: Math.floor(this._playing.duration / 1000),
+      ceil,
       showSelectionBar: true,
       hidePointerLabels: true,
       step: 1,
       translate: (value: number, label: LabelType): string => {
         switch (label) {
           case LabelType.Floor:
-            return this.durationPipe.transform(this.value);
+            if (this.value != null && this.value !== 0) {
+              return this.durationPipe.transform(this.value * this.stepElapsed);
+            } else {
+              return '';
+            }
           case LabelType.Ceil:
-            return this.durationPipe.transform(value);
+            if (value != null) {
+              return this.durationPipe.transform(value * this.stepElapsed);
+            } else {
+              return '';
+            }
           default:
             return value.toString();
         }
       },
     };
-    /*const currentTime = Date.now();
-    const elapsed = currentTime - this._playing.startTime;
-    this.value = Math.floor(elapsed / 1000);*/
     if (this.playing.position == null) {
       this.value = 0;
     } else {
-      this.value = Math.floor(this.playing.position / 1000);
+      this.value = this.playing.position / 250;
     }
 
     if (!this._playing.paused) {
-      this.refreshSubscription = interval(1000).subscribe(() => {
+      this.refreshSubscription = interval(this.stepElapsed).subscribe(() => {
         this.value++;
         if (!this.selecting) {
           this.manualRefresh.emit();
         }
-        if (this.value >= this._playing.duration / 1000) {
+        if (this.value > ceil) {
           this.onEnd(this._playing.id);
         }
       });
@@ -125,7 +134,7 @@ export class ServerStatusSliderComponent implements OnInit, OnDestroy {
 
   onUserChangeEnd(changeContext: ChangeContext) {
     this.selecting = false;
-    this.positionSubject.next(changeContext.value * 1000);
+    this.positionSubject.next(changeContext.value * this.stepElapsed);
   }
 
   onEnd(id: string) {

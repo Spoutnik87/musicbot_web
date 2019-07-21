@@ -1,44 +1,30 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { combineLatest, iif, of } from 'rxjs';
-import { map, mergeMap, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Permission } from 'src/app/enums/Permission';
-import { ContentService } from 'src/app/services';
-import {
-  getCategoriesLoaded,
-  getCategoriesLoading,
-  getGroupsLoaded,
-  getGroupsLoading,
-  getServerCategories,
-  getServerGroups,
-  CreateContent,
-  FetchServerCategories,
-  FetchServerGroups,
-  IAppState,
-} from 'src/app/store';
+import { CategoriesQuery } from 'src/app/store/categories/categories.query';
+import { CategoriesService } from 'src/app/store/categories/categories.service';
+import { ContentsService } from 'src/app/store/contents/contents.service';
+import { GroupsQuery } from 'src/app/store/groups/groups.query';
+import { GroupsService } from 'src/app/store/groups/groups.service';
 
 @Component({
   selector: 'app-create-content',
   templateUrl: './create-content.component.html',
 })
 export class CreateContentComponent {
-  loading = false;
-
   serverId = this.route.snapshot.paramMap.get('id');
 
-  categories$ = this.store.select(getServerCategories, { serverId: this.serverId });
-  categoriesLoading$ = this.store.select(getCategoriesLoading);
-  categoriesLoaded$ = this.store.select(getCategoriesLoaded);
+  categories$ = this.categoriesQuery.selectCategoriesByServer(this.serverId);
+  categoriesLoading$ = this.categoriesQuery.selectLoading();
 
-  groups$ = this.store
-    .select(getServerGroups, { serverId: this.serverId })
+  groups$ = this.groupsQuery
+    .selectGroupsByServer(this.serverId)
     .pipe(map(groups => groups.filter(group => group.member === true && group.permissions.includes(Permission.CREATE_CONTENT))));
-  groupsLoading$ = this.store.select(getGroupsLoading);
-  groupsLoaded$ = this.store.select(getGroupsLoaded);
+  groupsLoading$ = this.groupsQuery.selectLoading();
 
   loading$ = combineLatest([this.categoriesLoading$, this.groupsLoading$]).pipe(map(([a, b]) => a || b));
-  loaded$ = combineLatest([this.categoriesLoaded$, this.groupsLoaded$]).pipe(map(([a, b]) => a && b));
 
   contentId = null;
   contentCreated = false;
@@ -47,12 +33,15 @@ export class CreateContentComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private store: Store<IAppState>,
-    private contentService: ContentService,
-    private router: Router
+    private router: Router,
+    private groupsService: GroupsService,
+    private categoriesService: CategoriesService,
+    private groupsQuery: GroupsQuery,
+    private categoriesQuery: CategoriesQuery,
+    private contentsService: ContentsService
   ) {
-    this.store.dispatch(new FetchServerGroups(this.serverId));
-    this.store.dispatch(new FetchServerCategories(this.serverId));
+    this.groupsService.getByServer(this.serverId);
+    this.categoriesService.getByServer(this.serverId);
   }
 
   onSubmit(event: {
@@ -68,12 +57,6 @@ export class CreateContentComponent {
     contentType: string;
     link: string;
   }) {
-    const createThumbnail = (contentId: string, thumbnail: any) => {
-      return this.contentService.updateThumbnail(contentId, thumbnail);
-    };
-    const createMedia = (contentId: string, media: any) => {
-      return this.contentService.updateMedia(contentId, media);
-    };
     /**
      * Thumbnail is optionnal. Don't send it if thumbnail is null.
      */
@@ -83,7 +66,7 @@ export class CreateContentComponent {
         switchMap(() =>
           iif(
             () => !this.contentCreated,
-            this.contentService
+            this.contentsService
               .create(
                 event.visibleGroupList,
                 event.name,
@@ -93,8 +76,8 @@ export class CreateContentComponent {
                 event.link != null && event.link !== '' ? event.link : undefined
               )
               .pipe(
-                map(content => {
-                  this.contentId = content.id;
+                map(contentId => {
+                  this.contentId = contentId;
                   this.contentCreated = true;
                 })
               ),
@@ -105,7 +88,7 @@ export class CreateContentComponent {
         switchMap(() =>
           iif(
             () => event.thumbnail != null && !this.contentThumbnailCreated,
-            this.contentService.updateThumbnail(this.contentId, event.thumbnail).pipe(
+            this.contentsService.updateThumbnail(this.contentId, event.thumbnail).pipe(
               map(() => {
                 this.contentThumbnailCreated = true;
               })
@@ -117,7 +100,7 @@ export class CreateContentComponent {
         switchMap(() =>
           iif(
             () => event.contentType === 'LOCAL' && !this.contentMediaCreated,
-            this.contentService.updateMedia(this.contentId, event.media).pipe(
+            this.contentsService.updateMedia(this.contentId, event.media).pipe(
               map(() => {
                 this.contentMediaCreated = true;
               })

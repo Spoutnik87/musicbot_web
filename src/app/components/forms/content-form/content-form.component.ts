@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { faArrowCircleLeft, faArrowCircleRight, faSave, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { noop, of, BehaviorSubject, Subject } from 'rxjs';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { CategoryModel } from 'src/app/models/category.model';
 import { ContentModel } from 'src/app/models/content.model';
 import { GroupModel } from 'src/app/models/group.model';
@@ -64,17 +66,33 @@ export class ContentFormComponent {
     media?: any;
     thumbnailFile?: any;
     mediaFile?: any;
+  } = {
+    categoryId: '',
+    visibleGroupList: {},
+    name: '',
+    description: '',
+    contentType: 'YOUTUBE',
   };
 
-  constructor(private sanitizer: DomSanitizer) {
-    this.contentInput = {
-      categoryId: '',
-      visibleGroupList: {},
-      name: '',
-      description: '',
-      contentType: 'YOUTUBE',
-    };
-  }
+  videoId: string;
+
+  videoIdSubject = new BehaviorSubject(this.videoId != null ? 'https://www.youtube.com/watch?v=' + this.videoId : null);
+  videoId$ = this.videoIdSubject.asObservable().pipe(
+    debounceTime(500),
+    switchMap(value =>
+      of(value).pipe(
+        map(it => {
+          const url = new URL(it);
+          const videoId = url.searchParams.get('v');
+          this.videoId = videoId;
+          return videoId;
+        }),
+        catchError(() => of(undefined))
+      )
+    )
+  );
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   onCancel() {
     if (this.step > 1) {
@@ -93,7 +111,7 @@ export class ContentFormComponent {
         description: this.contentInput.description,
         categoryId: this.contentInput.categoryId,
         contentType: this.contentInput.contentType,
-        link: this.contentInput.link,
+        link: this.videoId != null ? 'https://www.youtube.com/watch?v=' + this.videoId : null,
         visibleGroupList: Object.keys(this.contentInput.visibleGroupList).map(key => ({
           id: key,
           visible: this.contentInput.visibleGroupList[key],
@@ -128,6 +146,10 @@ export class ContentFormComponent {
         reader.readAsDataURL(file);
       }
     }
+  }
+
+  onVideoLinkChange(event) {
+    this.videoIdSubject.next(event);
   }
 
   onRemoveThumbnail() {

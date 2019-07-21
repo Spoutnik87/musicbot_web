@@ -6,7 +6,7 @@
     [serverId]="serverId"
     (submit)="onSubmit($event)"
     (cancel)="onCancel()"
-    [loading]="loading"
-    *ngIf="!fetching && (loaded$ | async)"
+    [loading]="fetching"
+    *ngIf="!fetching"
   ></app-content-form>
 </div>

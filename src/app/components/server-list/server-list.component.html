@@ -5,25 +5,27 @@
       <a class="btn btn-success" routerLink="/create-server"><fa-icon [icon]="faPlusSquare"></fa-icon></a>
     </div>
   </div>
-  <div class="card-body">
-    <div class="text-center ghost" *ngIf="serversLoading$ | async as loading">
+  <div class="card-body" *appLet="serversLoading$ | async as loading">
+    <div class="text-center ghost" *ngIf="loading">
       <app-loading [loading]="loading"></app-loading>
     </div>
-    <ng-container *appLet="servers$ | async as servers">
-      <div class="text-center" *ngIf="servers.length === 0">
-        <div class="mt-2 ghost-text">
-          Aucun serveur actuellement
+    <ng-container *ngIf="!loading">
+      <ng-container *appLet="servers$ | async as servers">
+        <div class="text-center" *ngIf="servers.length === 0">
+          <div class="mt-2 ghost-text">
+            Aucun serveur actuellement
+          </div>
+          <div class="ghost">
+            <fa-icon [icon]="faGhost" size="5x"></fa-icon>
+          </div>
         </div>
-        <div class="ghost">
-          <fa-icon [icon]="faGhost" size="5x"></fa-icon>
-        </div>
-      </div>
-      <app-server-card
-        *ngFor="let server of servers"
-        [server]="server"
-        (select)="onSelect($event)"
-        (manage)="onManage($event)"
-      ></app-server-card>
+        <app-server-card
+          *ngFor="let server of servers"
+          [server]="server"
+          (select)="onSelect($event)"
+          (manage)="onManage($event)"
+        ></app-server-card>
+      </ng-container>
     </ng-container>
   </div>
 </div>

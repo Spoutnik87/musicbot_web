@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/containers/about/about.component';
+import { ContentComponent } from './components/containers/content/content.component';
 import { CreateCategoryComponent } from './components/containers/create-category/create-category.component';
 import { CreateContentComponent } from './components/containers/create-content/create-content.component';
 import { CreateGroupComponent } from './components/containers/create-group/create-group.component';
 import { CreateServerComponent } from './components/containers/create-server/create-server.component';
 import { EditCategoryComponent } from './components/containers/edit-category/edit-category.component';
 import { EditContentComponent } from './components/containers/edit-content/edit-content.component';
+import { EditServerComponent } from './components/containers/edit-server/edit-server.component';
 import { HomeComponent } from './components/containers/home/home.component';
 import { ManageServerComponent } from './components/containers/manage-server/manage-server.component';
 import { RegisterComponent } from './components/containers/register/register.component';
@@ -72,6 +74,16 @@ const routes: Routes = [
   {
     path: 'edit-category/:id',
     component: EditCategoryComponent,
+    canActivate: [AuthenticatedGuard],
+  },
+  {
+    path: 'edit-server/:id',
+    component: EditServerComponent,
+    canActivate: [AuthenticatedGuard],
+  },
+  {
+    path: 'content/:id',
+    component: ContentComponent,
     canActivate: [AuthenticatedGuard],
   },
 ];

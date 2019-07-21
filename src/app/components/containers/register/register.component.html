@@ -1,4 +1,4 @@
 <div class="container mt-5">
   <app-messages [messages]="messages$ | async"></app-messages>
-  <app-register-form (submit)="onSubmit($event)" [loading]="authenticatedUserLoading$ | async"></app-register-form>
+  <app-register-form (submit)="onSubmit($event)" [loading]="loading"></app-register-form>
 </div>

@@ -85,14 +85,23 @@
 <app-card title="Choisir un media" *ngIf="step === 4 && contentInput.contentType === 'YOUTUBE'">
   <div class="form-group">
     <label for="link">Lien de la video :</label>
-    <input type="text" class="form-control" name="link" id="link" [(ngModel)]="contentInput.link" placeholder="Lien" />
+    <input
+      type="text"
+      class="form-control"
+      name="link"
+      id="link"
+      [(ngModel)]="contentInput.link"
+      placeholder="Lien"
+      (ngModelChange)="onVideoLinkChange($event)"
+    />
+    <app-youtube-embed width="720" height="480" [videoId]="videoId" *ngIf="videoId$ | async as videoId"></app-youtube-embed>
   </div>
   <app-loading [loading]="loading"></app-loading>
   <button
     class="btn btn-success mt-2"
     *ngIf="!loading"
     (click)="onSubmit()"
-    [disabled]="contentInput.link == null || contentInput.link == ''"
+    [disabled]="contentInput.link == null || contentInput.link == '' || videoId == null"
   >
     <fa-icon [icon]="faArrowCircleLeft" class="mr-2"></fa-icon>Suivant
   </button>
@@ -104,11 +113,14 @@
   <div class="mb-2">
     Contenu visible pour les groupes :
   </div>
-  <app-toggle-input
-    *ngFor="let group of groups"
-    [(value)]="contentInput.visibleGroupList[group.id]"
-    [label]="group.name"
-  ></app-toggle-input>
+  <div class="row">
+    <app-toggle-input
+      class="col-md-6"
+      *ngFor="let group of groups"
+      [(value)]="contentInput.visibleGroupList[group.id]"
+      [label]="group.name"
+    ></app-toggle-input>
+  </div>
   <app-loading [loading]="loading"></app-loading>
   <button class="btn btn-success mt-2" *ngIf="!loading" (click)="onSubmit()"><fa-icon [icon]="faSave" class="mr-2"></fa-icon>Créer</button>
   <button class="btn btn-primary mt-2 ml-2" *ngIf="!loading" (click)="onCancel()">

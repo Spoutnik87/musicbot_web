@@ -1,11 +1,12 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { faAngleDoubleDown, faAngleDoubleUp } from '@fortawesome/free-solid-svg-icons';
-import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthService } from 'src/app/services';
-import { ClearStore, DisconnectUser, IAppState } from 'src/app/store';
+import { AppService } from 'src/app/store/app/app.service';
+import { AuthQuery } from 'src/app/store/auth/auth.query';
+import { AuthService } from 'src/app/store/auth/auth.service';
+import { UsersService } from 'src/app/store/users/users.service';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +18,7 @@ export class HeaderComponent implements OnDestroy {
   faAngleDoubleUp = faAngleDoubleUp;
   collapsed: boolean;
   routerSubscription: Subscription;
-  authenticatedUser$ = this.authService.authenticatedUser$.pipe(
+  authenticatedUser$ = this.authQuery.authenticatedUser$.pipe(
     map(() => ({
       isAuthenticated: this.authService.isAuthenticated(),
       isAdmin: this.authService.isAdmin(),
@@ -25,7 +26,13 @@ export class HeaderComponent implements OnDestroy {
     }))
   );
 
-  constructor(private router: Router, private authService: AuthService, private store: Store<IAppState>) {
+  constructor(
+    private router: Router,
+    private authQuery: AuthQuery,
+    private authService: AuthService,
+    private usersService: UsersService,
+    private appService: AppService
+  ) {
     this.collapsed = true;
     this.routerSubscription = this.router.events.subscribe(() => {
       if (!this.collapsed) {
@@ -42,10 +49,9 @@ export class HeaderComponent implements OnDestroy {
     if (!this.collapsed) {
       this.collapsed = true;
     }
-    this.authService.disconnect();
-    this.store.dispatch(new DisconnectUser());
-    this.store.dispatch(new ClearStore());
-    this.router.navigateByUrl('');
+    this.usersService.disconnect();
+    this.appService.clearStore();
+    this.router.navigateByUrl('/signin');
   }
 
   toggle() {

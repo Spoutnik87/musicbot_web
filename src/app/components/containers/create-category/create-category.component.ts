@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { CreateCategory, IAppState } from 'src/app/store';
+import { CategoriesService } from 'src/app/store/categories/categories.service';
 
 @Component({
   selector: 'app-create-category',
@@ -12,10 +11,15 @@ export class CreateCategoryComponent {
 
   serverId = this.route.snapshot.paramMap.get('id');
 
-  constructor(private route: ActivatedRoute, private router: Router, private store: Store<IAppState>) {}
+  constructor(private route: ActivatedRoute, private router: Router, private categoriesService: CategoriesService) {}
 
   onSubmit(event: { name: string }) {
-    this.store.dispatch(new CreateCategory(this.serverId, event.name));
+    this.categoriesService.create(this.serverId, event.name).subscribe(
+      () => {
+        this.router.navigateByUrl('/server/' + this.serverId);
+      },
+      () => {}
+    );
   }
 
   onCancel() {

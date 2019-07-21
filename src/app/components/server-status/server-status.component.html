@@ -1,4 +1,4 @@
-<div class="server-status-container p-3 mb-2" *ngIf="server?.status != null">
+<div class="server-status-container p-3 mb-2" *ngIf="server?.status != null && server?.status?.playing != null">
   <div>
     <div class="text-center" *ngIf="server.status.playing != null">{{ server.status.playing.name }}</div>
     <app-server-status-slider
@@ -29,7 +29,7 @@
         <tr *ngFor="let contentStatus of server.status.queue; let i = index">
           <td>{{ i + 1 }}</td>
           <td>{{ contentStatus.name }}</td>
-          <td>{{ contentStatus.duration / 1000 - 0.5 | number: '1.0-0' | duration }}</td>
+          <td>{{ contentStatus.duration | duration }}</td>
           <td>{{ contentStatus.initiator.nickname }}</td>
           <td>
             <button class="btn btn-dark mt-2 ml-2" (click)="onStop(contentStatus)">
