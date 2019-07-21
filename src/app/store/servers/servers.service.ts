@@ -35,6 +35,30 @@ export class ServersService {
     );
   }
 
+  getByUser(userId: string): void {
+    this.serversStore.setLoading(true);
+    this.httpClient.get(`${this.configService.getApiUrl()}/server/list/${userId}`).subscribe(
+      (servers: ServerModel[]) => {
+        this.serversStore.set(
+          servers.map(server => ({
+            id: server.id,
+            server,
+            loading: false,
+            loaded: true,
+            updating: false,
+            updated: false,
+            commandLoading: false,
+            commandLoaded: false,
+          }))
+        );
+        this.serversStore.setLoading(false);
+      },
+      () => {
+        this.serversStore.setLoading(false);
+      }
+    );
+  }
+
   getById(id: string): void {
     this.serversStore.upsert(id, current => ({
       id,
