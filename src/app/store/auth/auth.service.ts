@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   signIn(user: UserModel): void {
-    localStorage.setItem('uuid', user.id);
+    localStorage.setItem('id', user.id);
     localStorage.setItem('email', user.email);
     localStorage.setItem('token', user.token);
     localStorage.setItem('role', user.role.name);
@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   public getId(): string {
-    return localStorage.getItem('if');
+    return localStorage.getItem('id');
   }
 
   private getEmail(): string {
