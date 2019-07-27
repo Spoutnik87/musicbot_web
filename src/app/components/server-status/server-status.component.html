@@ -30,7 +30,7 @@
           <td>{{ i + 1 }}</td>
           <td>{{ contentStatus.name }}</td>
           <td>{{ contentStatus.duration | duration }}</td>
-          <td>{{ contentStatus.initiator.nickname }}</td>
+          <td>{{ contentStatus.initiator?.nickname }}</td>
           <td>
             <button class="btn btn-dark mt-2 ml-2" (click)="onStop(contentStatus)">
               <fa-icon [icon]="faWindowClose"></fa-icon>

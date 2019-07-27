@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faCopy, faSync } from '@fortawesome/free-solid-svg-icons';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { of } from 'rxjs';
 import { delay, map, switchMap } from 'rxjs/operators';
 import { ServerStatusHelper } from 'src/app/helpers/server-status.helper';
@@ -10,7 +10,6 @@ import { ContentsQuery } from 'src/app/store/contents/contents.query';
 import { ContentsService } from 'src/app/store/contents/contents.service';
 import { ServersQuery } from 'src/app/store/servers/servers.query';
 import { ServersService } from 'src/app/store/servers/servers.service';
-import { copyToClipboard } from 'src/app/utils';
 
 @Component({
   selector: 'app-server',
@@ -19,8 +18,6 @@ import { copyToClipboard } from 'src/app/utils';
 })
 export class ServerComponent {
   faSync = faSync;
-  faCopy = faCopy;
-  copyToClipboard = copyToClipboard;
 
   serverId = this.route.snapshot.paramMap.get('id');
   serverState$ = this.serversQuery.selectEntity(this.serverId);
@@ -47,7 +44,7 @@ export class ServerComponent {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private configService: ConfigService,
+    public configService: ConfigService,
     private serverStatusHelper: ServerStatusHelper,
     private serversService: ServersService,
     private serversQuery: ServersQuery,

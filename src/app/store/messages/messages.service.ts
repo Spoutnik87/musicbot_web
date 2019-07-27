@@ -6,7 +6,10 @@ import { MessagesStore } from './messages.store';
 export class MessagesService {
   constructor(private messagesStore: MessagesStore) {}
 
-  sendInfoMessage(message: string): void {
+  sendInfoMessage(message: string, clear = false): void {
+    if (clear) {
+      this.messagesStore.reset();
+    }
     this.messagesStore.add({
       id: v4(),
       message,
@@ -14,7 +17,10 @@ export class MessagesService {
     });
   }
 
-  sendSuccessMessage(message: string): void {
+  sendSuccessMessage(message: string, clear = false): void {
+    if (clear) {
+      this.messagesStore.reset();
+    }
     this.messagesStore.add({
       id: v4(),
       message,
@@ -22,7 +28,10 @@ export class MessagesService {
     });
   }
 
-  sendErrorMessage(message: string): void {
+  sendErrorMessage(message: string, clear = false): void {
+    if (clear) {
+      this.messagesStore.reset();
+    }
     this.messagesStore.add({
       id: v4(),
       message,
@@ -30,7 +39,10 @@ export class MessagesService {
     });
   }
 
-  sendInfoMessages(messages: string[]): void {
+  sendInfoMessages(messages: string[], clear = false): void {
+    if (clear) {
+      this.messagesStore.reset();
+    }
     this.messagesStore.add(
       messages.map(message => ({
         id: v4(),
@@ -40,7 +52,10 @@ export class MessagesService {
     );
   }
 
-  sendSuccessMessages(messages: string[]): void {
+  sendSuccessMessages(messages: string[], clear = false): void {
+    if (clear) {
+      this.messagesStore.reset();
+    }
     this.messagesStore.add(
       messages.map(message => ({
         id: v4(),
@@ -50,7 +65,10 @@ export class MessagesService {
     );
   }
 
-  sendErrorMessages(messages: string[]): void {
+  sendErrorMessages(messages: string[], clear = false): void {
+    if (clear) {
+      this.messagesStore.reset();
+    }
     this.messagesStore.add(
       messages.map(message => ({
         id: v4(),

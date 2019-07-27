@@ -178,7 +178,7 @@ export class UsersService {
           this.router.navigateByUrl('');
         },
         () => {
-          this.messagesService.sendErrorMessage("L'adresse mail ou le mot de passe est incorrecte.");
+          this.messagesService.sendErrorMessage("L'adresse mail ou le mot de passe est incorrecte.", true);
         }
       );
   }

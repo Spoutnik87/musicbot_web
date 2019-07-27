@@ -28,6 +28,7 @@ import { RegisterComponent } from './components/containers/register/register.com
 import { ServerComponent } from './components/containers/server/server.component';
 import { SigninComponent } from './components/containers/signin/signin.component';
 import { ContentListComponent } from './components/content-list/content-list.component';
+import { CopyComponent } from './components/copy/copy.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { CategoryFormComponent } from './components/forms/category-form/category-form.component';
 import { ContentFormComponent } from './components/forms/content-form/content-form.component';
@@ -110,6 +111,7 @@ akitaConfig({
     ThumbnailComponent,
     FileInputComponent,
     YoutubeEmbedComponent,
+    CopyComponent,
     DurationPipe,
     LetDirective,
   ],

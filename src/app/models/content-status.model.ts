@@ -2,7 +2,7 @@ export interface ContentStatusModel {
   uid: string;
   id: string;
   name: string;
-  initiator: {
+  initiator?: {
     id: string;
     nickname: string;
   };
