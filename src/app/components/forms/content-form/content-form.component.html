@@ -33,11 +33,7 @@
       <a class="btn btn-primary" [routerLink]="'/create-category/' + serverId">Ajouter une catégorie</a>
     </ng-container>
   </div>
-  <button
-    class="btn btn-success mt-2"
-    (click)="onSubmit()"
-    [disabled]="contentInput.name.length == 0 || contentInput.categoryId == '' || contentInput.groupId == ''"
-  >
+  <button class="btn btn-success mt-2" (click)="onSubmit()" [disabled]="contentInput.name.length == 0 || contentInput.categoryId == ''">
     <fa-icon [icon]="faArrowCircleLeft" class="mr-2"></fa-icon>Suivant
   </button>
   <button class="btn btn-primary mt-2 ml-2" (click)="onCancel()">Retour<fa-icon [icon]="faArrowCircleRight" class="ml-2"></fa-icon></button>

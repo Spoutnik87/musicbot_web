@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, iif, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { combineLatest, iif, of, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Permission } from 'src/app/enums/Permission';
 import { CategoriesQuery } from 'src/app/store/categories/categories.query';
 import { CategoriesService } from 'src/app/store/categories/categories.service';
@@ -31,6 +31,8 @@ export class CreateContentComponent {
   contentThumbnailCreated = false;
   contentMediaCreated = false;
 
+  loading = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -57,6 +59,7 @@ export class CreateContentComponent {
     contentType: string;
     link: string;
   }) {
+    this.loading = true;
     /**
      * Thumbnail is optionnal. Don't send it if thumbnail is null.
      */
@@ -111,17 +114,15 @@ export class CreateContentComponent {
       )
       .subscribe(
         () => {
-          this.onFinish();
+          this.router.navigateByUrl(`/server/${this.serverId}`);
         },
-        () => {}
+        () => {
+          this.loading = false;
+        }
       );
   }
 
   onCancel() {
-    this.router.navigateByUrl(`/server/${this.serverId}`);
-  }
-
-  onFinish() {
     this.router.navigateByUrl(`/server/${this.serverId}`);
   }
 }

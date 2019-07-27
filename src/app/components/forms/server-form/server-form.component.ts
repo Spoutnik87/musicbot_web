@@ -1,24 +1,20 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { faArrowCircleLeft, faArrowCircleRight, faCheck, faCopy, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleLeft, faArrowCircleRight, faCheck, faSave } from '@fortawesome/free-solid-svg-icons';
 import { of } from 'rxjs';
 import { delay, map, switchMap } from 'rxjs/operators';
 import { ConfigService } from 'src/app/services';
 import { UsersService } from 'src/app/store/users/users.service';
-import { copyToClipboard } from 'src/app/utils';
 
 @Component({
   selector: 'app-server-form',
   templateUrl: './server-form.component.html',
-  styleUrls: ['./server-form.component.css'],
 })
 export class ServerFormComponent {
   faSave = faSave;
   faCheck = faCheck;
   faArrowCircleLeft = faArrowCircleLeft;
   faArrowCircleRight = faArrowCircleRight;
-  faCopy = faCopy;
-  copyToClipboard = copyToClipboard;
 
   @Input()
   loading = false;
@@ -55,7 +51,7 @@ export class ServerFormComponent {
       })
     );
 
-  constructor(private router: Router, private configService: ConfigService, private usersService: UsersService) {
+  constructor(private router: Router, public configService: ConfigService, private usersService: UsersService) {
     this.server = {
       name: '',
     };

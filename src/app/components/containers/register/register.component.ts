@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   onSubmit(event: { email: string; nickname: string; password: string; confirmPassword: string; firstname: string; lastname: string }) {
     const { email, nickname, password, confirmPassword, firstname, lastname } = event;
 
-    if (password === confirmPassword) {
+    if (password === confirmPassword && password.length >= 6) {
       this.loading = true;
       this.usersService.create(email, nickname, password, firstname, lastname).subscribe(
         () => {
@@ -39,11 +39,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
         },
         () => {
           this.loading = false;
-          this.messagesService.sendErrorMessage("Une erreur est survenue lors de l'inscription.");
+          this.messagesService.sendErrorMessage("Une erreur est survenue lors de l'inscription.", true);
         }
       );
     } else {
-      this.messagesService.sendErrorMessage('Le mot de passe est invalide.');
+      this.messagesService.sendErrorMessage('Le mot de passe est invalide.', true);
     }
   }
 }

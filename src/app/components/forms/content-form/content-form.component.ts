@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { faArrowCircleLeft, faArrowCircleRight, faSave, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
-import { noop, of, BehaviorSubject, Subject } from 'rxjs';
+import { of, BehaviorSubject } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { CategoryModel } from 'src/app/models/category.model';
 import { ContentModel } from 'src/app/models/content.model';

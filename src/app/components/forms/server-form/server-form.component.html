@@ -22,17 +22,7 @@
 </app-card>
 <app-card title="Rejoindre un serveur" *ngIf="step === 2 && choice === 'JOIN'">
   Entrez la commande suivante dans un salon du serveur Discord que vous souhaitez rejoindre :
-  <div class="mt-2 row" *appLet="serverJoinToken$ | async as serverJoinToken">
-    <div class="col-md-10 token-container">{{ configService.getCommandPrefix() }}join {{ serverJoinToken?.serverJoinToken }}</div>
-    <div class="col-md-2">
-      <button
-        class="btn btn-primary"
-        (click)="copyToClipboard(configService.getCommandPrefix() + 'join ' + serverJoinToken.serverJoinToken)"
-      >
-        <fa-icon [icon]="faCopy" class="mr-2"></fa-icon>Copier
-      </button>
-    </div>
-  </div>
+  <app-copy [value]="configService.getCommandPrefix() + 'join ' + (serverJoinToken$ | async).serverJoinToken"></app-copy>
   <app-loading [loading]="serverJoinTokenLoading"></app-loading>
   <button class="btn btn-success mt-2" *ngIf="!serverJoinTokenLoading" (click)="onJoin()">
     <fa-icon [icon]="faCheck" class="mr-2"></fa-icon>C'est fait
