@@ -12,4 +12,8 @@ export class ConfigService {
   getCommandPrefix(): string {
     return environment.commandPrefix;
   }
+
+  getDomain(): string {
+    return environment.domain;
+  }
 }

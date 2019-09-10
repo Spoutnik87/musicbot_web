@@ -1,8 +1,8 @@
 <div class="mt-2 row">
   <div class="col-md-10 copy-container">{{ value }}</div>
   <div class="col-md-2">
-    <button class="btn btn-primary" (click)="onClick(value)">
-      <fa-icon [icon]="faCopy" class="mr-2"></fa-icon>{{ copied ? 'Copié' : 'Copier' }}
+    <button class="btn btn-primary " (click)="onClick(value)">
+      <fa-icon [icon]="copied ? faCheck : faCopy" class="mr-2"></fa-icon>{{ copied ? 'Copié' : 'Copier' }}
     </button>
   </div>
 </div>

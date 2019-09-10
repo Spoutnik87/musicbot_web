@@ -128,6 +128,7 @@ export class ServerStatusHelper {
   playContent(id: string, status: ServerStatusModel, contentId: string) {
     if (status == null) {
       status = {
+        date: new Date().getTime(),
         id,
         queue: [],
       };
@@ -164,11 +165,13 @@ export class ServerStatusHelper {
   clearQueue(id: string, status: ServerStatusModel) {
     if (status == null) {
       status = {
+        date: new Date().getTime(),
         id,
         queue: [],
       };
     }
     const result: ServerStatusModel = {
+      date: new Date().getTime(),
       id,
       queue: [],
     };

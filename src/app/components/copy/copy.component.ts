@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { copyToClipboard } from 'src/app/utils';
 
 @Component({
@@ -9,6 +9,7 @@ import { copyToClipboard } from 'src/app/utils';
 })
 export class CopyComponent {
   faCopy = faCopy;
+  faCheck = faCheck;
   copied = false;
 
   @Input()

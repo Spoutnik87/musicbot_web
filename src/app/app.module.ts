@@ -50,6 +50,7 @@ import { ServerCardComponent } from './components/server-card/server-card.compon
 import { ServerListComponent } from './components/server-list/server-list.component';
 import { ServerStatusSliderComponent } from './components/server-status-slider/server-status-slider.component';
 import { ServerStatusComponent } from './components/server-status/server-status.component';
+import { ShortcutButtonComponent } from './components/shortcut-button/shortcut-button.component';
 import { ThumbnailComponent } from './components/thumbnail/thumbnail.component';
 import { YoutubeEmbedComponent } from './components/youtube-embed/youtube-embed.component';
 import { LetDirective } from './directives/let.directive';
@@ -112,6 +113,7 @@ akitaConfig({
     FileInputComponent,
     YoutubeEmbedComponent,
     CopyComponent,
+    ShortcutButtonComponent,
     DurationPipe,
     LetDirective,
   ],
